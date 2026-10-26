@@ -35,7 +35,11 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        # `npm install` y no `npm ci`: el lock se regenera en Windows y npm
+        # valida distinto entre versiones/plataformas los bindings nativos
+        # opcionales (@rolldown/@emnapi); apagar dependencias ignorando lock
+        # es la sincronizacion del paso interno del runner.
+        run: npm install --no-audit --no-fund
 
       - name: Build (production)
         run: npm run build
