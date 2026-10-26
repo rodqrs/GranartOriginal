@@ -59,7 +59,7 @@ export class Home implements AfterViewInit, OnDestroy {
   private scrollListener?: () => void;
   private scrollIdleTimer: ReturnType<typeof setTimeout> | null = null;
   private snapSectionsSubscription?: Subscription;
-  private readonly fallbackImageUrl = '/assets/images/logo.jpg';
+  private readonly fallbackImageUrl = 'assets/images/logo.jpg';
 
   /**
    * Tolerancia en px para el cálculo de la sección activa.
@@ -197,11 +197,13 @@ export class Home implements AfterViewInit, OnDestroy {
     }
 
     if (normalized.startsWith('/assets/') || normalized.startsWith('assets/')) {
-      return normalized.startsWith('/') ? normalized : `/${normalized}`;
+      // Relativa sin `/` inicial: se resuelve contra el `<base href>` y
+      // funciona tanto en raíz como en subdirectorio (GitHub Pages).
+      return normalized.startsWith('/') ? normalized.slice(1) : normalized;
     }
 
     const filename = normalized.split('/').pop() ?? '';
-    return filename ? `/assets/images/${filename}` : this.fallbackImageUrl;
+    return filename ? `assets/images/${filename}` : this.fallbackImageUrl;
   }
 
   onImageError(event: Event): void {

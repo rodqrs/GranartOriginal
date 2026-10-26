@@ -35,7 +35,7 @@ export const PRODUCTOS_FALLBACK: readonly Product[] = [
     categoria: 'cafe-tostado',
     precio: 25000,
     cantidadDisponible: 50,
-    imagenUrl: '/assets/images/cafe-tostado.jpg',
+    imagenUrl: 'assets/images/cafe-tostado.jpg',
     disponible: true
   },
   {
@@ -45,7 +45,7 @@ export const PRODUCTOS_FALLBACK: readonly Product[] = [
     categoria: 'cafe-molido',
     precio: 28000,
     cantidadDisponible: 30,
-    imagenUrl: '/assets/images/cafe-molido.jpg',
+    imagenUrl: 'assets/images/cafe-molido.jpg',
     disponible: true
   },
   {
@@ -55,7 +55,7 @@ export const PRODUCTOS_FALLBACK: readonly Product[] = [
     categoria: 'cafe-verde',
     precio: 22000,
     cantidadDisponible: 40,
-    imagenUrl: '/assets/images/cafe-verde.jpg',
+    imagenUrl: 'assets/images/cafe-verde.jpg',
     disponible: true
   },
   {
@@ -65,7 +65,7 @@ export const PRODUCTOS_FALLBACK: readonly Product[] = [
     categoria: 'chocolate',
     precio: 18000,
     cantidadDisponible: 60,
-    imagenUrl: '/assets/images/chocolate.jpg',
+    imagenUrl: 'assets/images/chocolate.jpg',
     disponible: true
   },
   {
@@ -75,7 +75,7 @@ export const PRODUCTOS_FALLBACK: readonly Product[] = [
     categoria: 'cafe-molido',
     precio: 26000,
     cantidadDisponible: 45,
-    imagenUrl: '/assets/images/cafe-molido.jpg',
+    imagenUrl: 'assets/images/cafe-molido.jpg',
     disponible: true
   },
   {
@@ -85,7 +85,7 @@ export const PRODUCTOS_FALLBACK: readonly Product[] = [
     categoria: 'cafe-verde',
     precio: 34000,
     cantidadDisponible: 20,
-    imagenUrl: '/assets/images/cafe-verde.jpg',
+    imagenUrl: 'assets/images/cafe-verde.jpg',
     disponible: true
   },
   {
@@ -95,7 +95,7 @@ export const PRODUCTOS_FALLBACK: readonly Product[] = [
     categoria: 'chocolate',
     precio: 22000,
     cantidadDisponible: 40,
-    imagenUrl: '/assets/images/chocolate.jpg',
+    imagenUrl: 'assets/images/chocolate.jpg',
     disponible: true
   }
 ];

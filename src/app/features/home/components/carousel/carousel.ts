@@ -58,7 +58,7 @@ export class Carousel implements OnInit, OnDestroy, OnChanges, AfterViewInit {
   isTransitioning = false;
   isHovering = false;
   private transitionTimeout: ReturnType<typeof setTimeout> | null = null;
-  private readonly fallbackImageUrl = '/assets/images/logo.jpg';
+   private readonly fallbackImageUrl = 'assets/images/logo.jpg';
 
   readonly AUTOPLAY_DELAY = 7000; // 7 segundos entre slides
   readonly TRANSITION_DURATION = 550; // duración de transición visual
@@ -321,11 +321,14 @@ export class Carousel implements OnInit, OnDestroy, OnChanges, AfterViewInit {
     }
 
     if (normalized.startsWith('/assets/') || normalized.startsWith('assets/')) {
-      return normalized.startsWith('/') ? normalized : `/${normalized}`;
+      // Relativa sin `/` inicial: el navegador la resuelve contra el
+      // `<base href>` del build, necesario para desplegar en subdirectorio
+      // (GitHub Pages de proyecto). `/assets/...` absoluto rompería el subpath.
+      return normalized.startsWith('/') ? normalized.slice(1) : normalized;
     }
 
     const filename = normalized.split('/').pop() ?? '';
-    return filename ? `/assets/images/${filename}` : this.fallbackImageUrl;
+    return filename ? `assets/images/${filename}` : this.fallbackImageUrl;
   }
 
   /**

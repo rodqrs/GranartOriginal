@@ -26,7 +26,9 @@ describe('Carousel getImagenUrl', () => {
   }
 
   const carousel = mountCarousel();
-  const FALLBACK = '/assets/images/logo.jpg';
+  // Rutas relativas sin `/` inicial: se resuelven contra `<base href>` y
+  // funcionan tanto en la raíz como en un subdirectorio (GitHub Pages).
+  const FALLBACK = 'assets/images/logo.jpg';
 
   it.each([
     // ── Clase 1: empty / null / undefined / whitespace ──────────
@@ -37,16 +39,16 @@ describe('Carousel getImagenUrl', () => {
     ['http://legacy/old.jpg', 'http://legacy/old.jpg'],
     // ── Clase 3: data: URI ──────────────────────────────────────
     ['data:image/png;base64,iVBORw0KGgo=', 'data:image/png;base64,iVBORw0KGgo='],
-    // ── Clase 4: /assets/... (leading slash) ────────────────────
-    ['/assets/images/cafe.jpg', '/assets/images/cafe.jpg'],
-    // ── Clase 5: assets/... (no leading slash) ──────────────────
-    ['assets/images/cafe.jpg', '/assets/images/cafe.jpg'],
+    // ── Clase 4: /assets/... ( leading slash → relativa ) ────────
+    ['/assets/images/cafe.jpg', 'assets/images/cafe.jpg'],
+    // ── Clase 5: assets/... (sin /) ─────────────────────────────
+    ['assets/images/cafe.jpg', 'assets/images/cafe.jpg'],
     // ── Clase 6: uploads/... (rewrite legacy path) ──────────────
-    ['uploads/products/cafe.jpg', '/assets/images/cafe.jpg'],
-    ['/uploads/products/cafe.jpg', '/assets/images/cafe.jpg'],
+    ['uploads/products/cafe.jpg', 'assets/images/cafe.jpg'],
+    ['/uploads/products/cafe.jpg', 'assets/images/cafe.jpg'],
     // ── Bonus: bare filename (no slashes, no protocol) ──────────
-    ['foo', '/assets/images/foo'],
-    ['foo/bar/img.png', '/assets/images/img.png'],
+    ['foo', 'assets/images/foo'],
+    ['foo/bar/img.png', 'assets/images/img.png'],
   ])('should resolve "%s" to "%s"', (input, expected) => {
     expect(carousel.getImagenUrl(input)).toBe(expected);
   });
