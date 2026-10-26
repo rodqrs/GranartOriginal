@@ -1,0 +1,108 @@
+<!-- Contenedor principal del carousel con eventos de hover -->
+<div class="carousel-container"
+     (mouseenter)="alEntrarMouse()"
+     (mouseleave)="alSalirMouse()">
+
+  <!-- Slides de productos -->
+  <div class="carousel-slides">
+    @for (producto of productos; track producto.id; let i = $index) {
+      <div class="carousel-slide"
+           [class.active]="i === currentIndex">
+
+        <!-- Imagen de fondo COMPLETA (SIN blur - ocupa todo el viewport) -->
+        <img [src]="getImagenUrl(producto.imagenUrl)"
+             [alt]="producto.titulo"
+             class="slide-image"
+             (error)="onImageError($event)"
+             loading="lazy">
+
+        <!-- Overlay con texto (SOLO AQUÍ se aplica backdrop-filter blur) -->
+        <div class="slide-overlay">
+          <div class="text-container">
+            <h2 class="producto-titulo">{{ producto.titulo }}</h2>
+            <p class="producto-descripcion">{{ producto.descripcion }}</p>
+
+            <div class="producto-info">
+              <span class="precio">
+                ${{ formatearPrecio(producto.precio) }}
+              </span>
+              <span class="disponibilidad"
+                    [class.disponible]="producto.disponible"
+                    [class.agotado]="!producto.disponible">
+                {{ producto.disponible ? 'Disponible' : 'Agotado' }}
+              </span>
+            </div>
+
+            <a class="ver-detalle-link"
+               [attr.href]="'#detalle-producto-' + producto.id"
+               (click)="irADetalle($event, producto.id)">
+              Ver detalle completo
+            </a>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Miniaturas a la izquierda (solo productos disponibles) -->
+  <nav #thumbRail class="carousel-thumbnails" aria-label="Miniaturas de productos disponibles">
+    @for (producto of getProductosDisponibles(); track producto.id) {
+      <a #thumbItem class="thumbnail-item"
+         [class.active]="esProductoActivo(producto.id)"
+         [attr.href]="'#detalle-producto-' + producto.id"
+         [attr.aria-label]="'Ir a ' + producto.titulo"
+        (click)="irADetalleDesdeMiniatura($event, producto.id)">
+        <img [src]="getImagenUrl(producto.imagenUrl)"
+             [alt]="producto.titulo"
+             class="thumbnail-image"
+             loading="lazy"
+             (error)="onImageError($event)">
+        <span class="thumbnail-label">{{ producto.titulo }}</span>
+      </a>
+    }
+  </nav>
+
+  <!-- Flechas de navegación (aparecen solo al hover) -->
+  <button class="carousel-arrow prev"
+      type="button"
+          (click)="anterior()"
+          aria-label="Producto anterior"
+          mat-icon-button>
+    <mat-icon>chevron_left</mat-icon>
+  </button>
+
+  <button class="carousel-arrow next"
+      type="button"
+          (click)="siguiente()"
+          aria-label="Siguiente producto"
+          mat-icon-button>
+    <mat-icon>chevron_right</mat-icon>
+  </button>
+
+  <!-- Chevron inferior "siguiente" (solo mobile) -->
+  <!-- En esta medida el rail de productos esta oculto, asi que este boton es la -->
+  <!-- unica forma visible de avanzar. `haySiguiente()` lo retira en el ultimo -->
+  <!-- producto para que `siguiente()` no haga wrap al primero. -->
+  @if (haySiguiente()) {
+    <button class="carousel-chevron-next"
+            type="button"
+            (click)="siguiente()"
+            aria-label="Siguiente producto">
+      <i class="fa-solid fa-chevron-down carousel-chevron-icon" aria-hidden="true"></i>
+    </button>
+  }
+
+  <!-- Indicadores tipo NEON (barras horizontales, NO círculos) -->
+  <div class="carousel-indicators" role="tablist">
+    @for (producto of productos; track producto.id; let i = $index) {
+      <button class="indicator"
+              type="button"
+              [class.active]="i === currentIndex"
+              (click)="irASlide(i)"
+              [attr.aria-label]="'Ir a producto ' + (i + 1)"
+              [attr.aria-selected]="i === currentIndex"
+              role="tab">
+      </button>
+    }
+  </div>
+</div>

@@ -1,0 +1,12 @@
+/* Layout raíz de la SPA. El Header se posiciona fixed, por eso el
+   <main> necesita un offset mínimo para que el contenido no quede
+   tapado por el header en el primer paint. */
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.main-content {
+  min-height: 100vh;
+  width: 100%;
+}

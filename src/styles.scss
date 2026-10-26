@@ -1,0 +1,88 @@
+@use './assets/styles/variables' as *;
+@use './assets/styles/mixins' as *;
+
+:root {
+  --header-offset: 96px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --header-offset: 72px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --header-offset: 64px;
+  }
+}
+
+@media (max-width: 360px) {
+  :root {
+    --header-offset: 58px;
+  }
+}
+
+// Escalón ultra-chico (≤200px). Va DESPUÉS del bloque de 360px a propósito:
+// misma especificidad, gana el último, así que el offset cae a 0 sin tocar la
+// escalera existente.
+//
+// El header es `position: fixed` y a esta medida ya no entra: se superpone al
+// contenido y además queda recortado por el `overflow-x: hidden` de
+// `html, body`. Escondiéndolo (ver `header.scss`) hay que anular TAMBIÉN el
+// offset, porque todas las secciones reservan `padding-top: var(--header-offset)`
+// para despejar el header: sin el `0px` quedaría un hueco muerto de hasta 58px
+// arriba de cada una.
+//
+// Trade-off aceptado: a ≤200px no queda navegación alguna. Es una medida
+// degenerada (aparece al plegar una ventana angosta), no un diseño usable, y
+// el header plegable es una tanda posterior.
+@media (max-width: 200px) {
+  :root {
+    --header-offset: 0px;
+  }
+}
+
+// Reset básico
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+  background-color: $color-background;
+  color: $color-text-dark;
+  overflow-x: hidden;
+}
+
+// Scroll suave
+html {
+  scroll-behavior: smooth;
+  // `proximity` en lugar de `mandatory`: las secciones altas (grilla de 7
+  // productos y resumen final) miden más que la pantalla y no tienen punto de
+  // snap intermedio, así que con `mandatory` sus filas de abajo quedaban
+  // inalcanzables (el snap empujaba al siguiente ancla). `proximity` reposa
+  // cerca de los bordes y deja scroll libre dentro de la sección.
+  scroll-snap-type: y proximity;
+  scroll-padding-top: 0;
+}
+
+// Links y botones
+a, button {
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+}
+
+// Imágenes responsive por defecto
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}

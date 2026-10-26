@@ -1,0 +1,31 @@
+// ==================== COLORES PRINCIPALES ====================
+$color-primary: #6b4c32;        // Café oscuro
+$color-primary-light: #8b6f47;  // Café claro
+$color-secondary: #2c1810;      // Marrón chocolate
+$color-accent: #ffd700;         // Dorado
+$color-background: #f8f9fa;     // Gris muy claro
+$color-text-dark: #212529;
+$color-text-light: #ffffff;
+$color-success: #51cf66;
+$color-error: #ff6b6b;
+
+// ==================== SOMBRAS ====================
+$shadow-light: 0 2px 4px rgba(0, 0, 0, 0.1);
+$shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.15);
+$shadow-heavy: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+// ==================== BREAKPOINTS RESPONSIVE ====================
+$breakpoint-mobile: 768px;
+$breakpoint-tablet: 1024px;
+$breakpoint-desktop: 1440px;
+
+// ==================== TRANSICIONES ====================
+$transition-fast: 0.3s ease;
+$transition-medium: 0.6s ease;
+$transition-slow: 1s ease;
+
+// ==================== Z-INDEX ====================
+$z-header: 1000;
+$z-carousel-controls: 3;
+$z-carousel-overlay: 2;
+$z-carousel-image: 1;

@@ -1,0 +1,38 @@
+<header class="main-header">
+  <div class="header-content">
+    <div class="logo-section">
+      <a class="logo-link" href="#inicio-carrusel" aria-label="Ir al carrusel de productos">
+        <div class="logo-frame">
+          <img src="assets/images/logo.jpg"
+               alt="Logo {{ nombreEmpresa }}"
+               class="logo"
+               onerror="this.style.display='none'">
+        </div>
+      </a>
+      <h1 class="brand-name">{{ nombreEmpresa }}</h1>
+    </div>
+
+    <div class="header-actions">
+      <nav class="header-nav" aria-label="Navegación principal">
+        <a class="header-nav-link" href="#inicio-carrusel">
+          <i class="fa-solid fa-house" aria-hidden="true"></i>
+          <span class="header-nav-label">Inicio</span>
+        </a>
+      </nav>
+
+      <nav class="social-nav" aria-label="Redes sociales">
+        @for (red of redesSociales; track red.nombre) {
+          @if (red.url; as url) {
+            <a [href]="url" target="_blank" rel="noopener noreferrer" [attr.aria-label]="red.ariaLabel" class="social-link">
+              <i [class]="red.iconoClase" aria-hidden="true"></i>
+            </a>
+          } @else {
+            <span class="social-link social-link--disabled" [attr.aria-label]="red.ariaLabel" aria-disabled="true">
+              <i [class]="red.iconoClase" aria-hidden="true"></i>
+            </span>
+          }
+        }
+      </nav>
+    </div>
+  </div>
+</header>

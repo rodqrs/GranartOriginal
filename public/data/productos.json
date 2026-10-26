@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "titulo": "Café Tostado Premium Artesanal",
+    "descripcion": "Café 100% arábica colombiano tostado de forma artesanal.",
+    "categoria": "cafe-tostado",
+    "precio": 25000,
+    "cantidadDisponible": 50,
+    "imagenUrl": "/assets/images/cafe-tostado.jpg",
+    "disponible": true
+  },
+  {
+    "id": 2,
+    "titulo": "Café Molido Especial Tipo Uva",
+    "descripcion": "Perfil afrutado, acidez cítrica balanceada y cuerpo medio-alto.",
+    "categoria": "cafe-molido",
+    "precio": 28000,
+    "cantidadDisponible": 30,
+    "imagenUrl": "/assets/images/cafe-molido.jpg",
+    "disponible": true
+  },
+  {
+    "id": 3,
+    "titulo": "Café Verde Orgánico Sin Tostar",
+    "descripcion": "Granos de café verde orgánico para infusiones.",
+    "categoria": "cafe-verde",
+    "precio": 22000,
+    "cantidadDisponible": 40,
+    "imagenUrl": "/assets/images/cafe-verde.jpg",
+    "disponible": true
+  },
+  {
+    "id": 4,
+    "titulo": "Chocolate Artesanal 70% Cacao",
+    "descripcion": "Chocolate artesanal con cacao fino colombiano.",
+    "categoria": "chocolate",
+    "precio": 18000,
+    "cantidadDisponible": 60,
+    "imagenUrl": "/assets/images/chocolate.jpg",
+    "disponible": true
+  },
+  {
+    "id": 6,
+    "titulo": "Café Molido Reserva Tueste Oscuro",
+    "descripcion": "Molienda fina para espresso, cuerpo intenso y notas de cacao amargo.",
+    "categoria": "cafe-molido",
+    "precio": 26000,
+    "cantidadDisponible": 45,
+    "imagenUrl": "/assets/images/cafe-molido.jpg",
+    "disponible": true
+  },
+  {
+    "id": 7,
+    "titulo": "Café Verde Geisha de Altura",
+    "descripcion": "Variedad Geisha de altura, perfil floral y cítrico para tostión en casa.",
+    "categoria": "cafe-verde",
+    "precio": 34000,
+    "cantidadDisponible": 20,
+    "imagenUrl": "/assets/images/cafe-verde.jpg",
+    "disponible": true
+  },
+  {
+    "id": 8,
+    "titulo": "Chocolate Artesanal 85% Cacao",
+    "descripcion": "Barra de chocolate oscuro 85% con cacao fino de aroma colombiano.",
+    "categoria": "chocolate",
+    "precio": 22000,
+    "cantidadDisponible": 40,
+    "imagenUrl": "/assets/images/chocolate.jpg",
+    "disponible": true
+  }
+]

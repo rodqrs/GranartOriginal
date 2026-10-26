@@ -1,0 +1,854 @@
+@use '../../../assets/styles/variables' as *;
+@use '../../../assets/styles/mixins' as *;
+
+:host {
+  display: block;
+}
+
+.home-snap-layout {
+  width: 100%;
+}
+
+.snap-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.home-hero-section {
+  min-height: 100vh;
+}
+
+.productos-grid-section {
+  @include featured-section();
+}
+
+.productos-grid-shell {
+  @include section-shell();
+}
+
+.section-header {
+  @include section-header-shared();
+}
+
+.productos-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.65rem, 1.2vw, 0.95rem);
+}
+
+.producto-grid-card {
+  display: grid;
+  grid-template-columns: minmax(96px, 33%) 1fr;
+  min-height: 132px;
+  overflow: hidden;
+  border-radius: 16px;
+  text-decoration: none;
+  color: $color-text-light;
+  box-shadow: $shadow-medium;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.07) 0%, rgba(0, 0, 0, 0.28) 100%);
+  transform: translateY(0);
+  transition: transform $transition-fast, border-color $transition-fast;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.28);
+  }
+
+  .grid-image {
+    width: 100%;
+    height: 100%;
+    // Normaliza el aporte de alto de TODAS las imagenes (4/3). Sin esto, una foto
+    // vertical (cafe-verde.jpg es 3146x3933) impone su proporcion y estira su fila:
+    // sectores apaisados quedan bajos y la fila con la vertical queda enorme.
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .grid-content {
+    padding: clamp(0.68rem, 1.2vw, 0.95rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.42rem;
+    min-width: 0;
+
+    h3 {
+      font-size: clamp(0.92rem, 1.4vw, 1.12rem);
+      margin: 0;
+    }
+
+    p {
+      color: rgba(255, 255, 255, 0.9);
+      line-height: 1.4;
+      font-size: clamp(0.77rem, 1.1vw, 0.9rem);
+      margin: 0;
+      display: -webkit-box;
+      line-clamp: 3;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .grid-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.1rem;
+
+      .precio {
+        color: $color-accent;
+        font-size: clamp(0.95rem, 1.4vw, 1.08rem);
+        font-weight: 700;
+      }
+
+      .stock {
+        font-size: 0.74rem;
+        padding: 0.24rem 0.55rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.45);
+        background: rgba(0, 0, 0, 0.28);
+      }
+    }
+  }
+}
+
+// Con una cantidad impar de productos la ultima tarjeta ocupa las dos columnas
+// para no dejar una celda vacia al final de la grilla.
+.producto-grid-card:last-child:nth-child(odd) {
+  grid-column: span 2;
+  // La columna de imagen se reduce a la mitad porque la tarjeta ahora mide el
+  // doble de ancho: asi la foto conserva el mismo ancho absoluto que las demas.
+  grid-template-columns: minmax(96px, 16.5%) 1fr;
+}
+
+.productos-detalle-wrapper {
+  background-color: #130902;
+}
+
+.producto-detalle-seccion {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding:
+    var(--header-offset, 96px)
+    clamp(1rem, 5vw, 3rem)
+    clamp(1rem, 5vw, 3rem);
+  overflow: hidden;
+
+  .detalle-fondo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .detalle-capa {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to top, rgba(0, 0, 0, 0.84) 0%, rgba(0, 0, 0, 0.38) 52%, rgba(0, 0, 0, 0.2) 100%);
+  }
+
+  // Rail lateral de acceso rápido entre productos.
+  // Replica el lenguaje visual de `.carousel-thumbnails` del carousel para que
+  // la navegación se sienta idéntica en el hero y en las pantallas de detalle.
+  // z-index 3 -> por encima de `.detalle-capa` (overlay) y de `.detalle-contenido` (2).
+  .detalle-thumbnails {
+    position: absolute;
+    left: 0.8rem;
+    top: 7rem;
+    transform: none;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 0.42rem;
+    width: min(190px, 26vw);
+    max-height: calc(100vh - 8.5rem);
+    overflow-y: auto;
+    padding: 0.45rem;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.33);
+    backdrop-filter: blur(10px);
+
+    .thumbnail-item {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 0.38rem;
+      align-items: center;
+      text-decoration: none;
+      color: $color-text-light;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 10px;
+      padding: 0.28rem;
+      min-height: 78px;
+      transition: all $transition-fast;
+
+      &:hover {
+        border-color: rgba(255, 255, 255, 0.85);
+        transform: translateX(2px);
+      }
+
+      &.active {
+        border-color: $color-accent;
+        box-shadow: 0 0 14px rgba(255, 215, 0, 0.28);
+      }
+
+      .thumbnail-image {
+        width: 52px;
+        height: 76px;
+        border-radius: 8px;
+        object-fit: cover;
+      }
+
+      .thumbnail-label {
+        font-size: 0.76rem;
+        line-height: 1.2;
+        display: -webkit-box;
+        line-clamp: 3;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+    }
+
+    // En mobile el rail lateral se oculta por completo: ni columna ni tira
+    // horizontal. Ese espacio pasa al chevron inferior
+    // (`.detalle-chevron-next`), que queda como unica navegacion visible.
+    @include responsive(mobile) {
+      display: none;
+    }
+  }
+
+  .detalle-contenido {
+    position: relative;
+    z-index: 2;
+    max-width: min(760px, 100%);
+    @include glassmorphism(0.13, 14px);
+    border-radius: 20px;
+    padding: clamp(1rem, 3.5vw, 2.2rem);
+
+    .detalle-numero {
+      margin: 0 0 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 0.75rem;
+    }
+
+    h2 {
+      margin: 0 0 0.8rem;
+      font-size: clamp(1.6rem, 5vw, 3.2rem);
+      color: $color-text-light;
+    }
+
+    .detalle-descripcion {
+      margin: 0 0 1.2rem;
+      color: rgba(255, 255, 255, 0.93);
+      line-height: 1.7;
+      font-size: clamp(0.9rem, 2vw, 1.06rem);
+      max-width: 62ch;
+    }
+
+    .detalle-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+
+      .pill {
+        border-radius: 999px;
+        padding: 0.4rem 0.78rem;
+        border: 1px solid rgba(255, 255, 255, 0.32);
+        background: rgba(0, 0, 0, 0.34);
+        color: $color-text-light;
+        font-size: 0.84rem;
+      }
+
+      .precio {
+        color: $color-accent;
+        font-weight: 700;
+      }
+
+      .estado.disponible {
+        border-color: $color-success;
+        color: $color-success;
+      }
+
+      .estado.agotado {
+        border-color: $color-error;
+        color: $color-error;
+      }
+    }
+  }
+
+  // ==================== CHEVRON INFERIOR "SIGUIENTE" (SOLO MOBILE) ====================
+  // Va en absoluto porque `.producto-detalle-seccion` es un flex ROW: un hijo
+  // mas en flujo se colocaria al lado de `.detalle-contenido`, no debajo. La
+  // franja que ocupa la reservo el `padding-bottom` mobile de la seccion, asi
+  // que nunca se superpone con el contenido.
+  .detalle-chevron-next {
+    display: none;
+
+    @include responsive(mobile) {
+      position: absolute;
+      left: 50%;
+      bottom: 0.4rem;
+      transform: translateX(-50%);
+      z-index: 3;
+      display: grid;
+      place-items: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.42);
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(10px);
+      color: $color-text-light;
+      font-size: 0.95rem;
+      text-decoration: none;
+
+      &:hover,
+      &:focus-visible {
+        border-color: $color-accent;
+        color: $color-accent;
+      }
+    }
+  }
+}
+
+// La animacion va en el icono, no en el enlace: el `transform` del enlace ya
+// esta en uso por `translateX(-50%)` y la animacion lo sobrescribiria.
+.detalle-chevron-icon {
+  display: block;
+  animation: detalleChevronBob 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .detalle-chevron-icon {
+    animation: none;
+  }
+}
+
+// ==================== OSCILACIÓN VERTICAL DEL CHEVRON ====================
+// Prefijo propio para no colisionar con las demas animaciones del proyecto.
+@keyframes detalleChevronBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+.footer-final-section {
+  @include featured-section();
+
+  .footer-shell {
+    @include section-shell();
+  }
+
+  .footer-header {
+    @include section-header-shared();
+  }
+
+  .footer-productos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+
+  .footer-producto-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+
+    &:hover .footer-producto-card {
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.34);
+    }
+  }
+
+  .footer-producto-link:last-child:nth-child(odd) {
+    grid-column: span 2;
+  }
+
+  .footer-producto-card {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 0.8rem;
+    padding: 0.75rem;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(8px);
+    transition: transform $transition-fast, border-color $transition-fast;
+  }
+
+  .footer-producto-img {
+    width: 110px;
+    height: 110px;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+
+  .footer-producto-body {
+    h3 {
+      margin: 0 0 0.4rem;
+      font-size: 1rem;
+    }
+
+    p {
+      margin: 0 0 0.7rem;
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.9);
+      line-height: 1.5;
+      display: -webkit-box;
+      line-clamp: 2;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+
+  .footer-producto-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+
+    .pill {
+      border-radius: 999px;
+      padding: 0.3rem 0.65rem;
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      background: rgba(0, 0, 0, 0.34);
+      color: $color-text-light;
+      font-size: 0.75rem;
+    }
+
+    .precio {
+      color: $color-accent;
+      font-weight: 700;
+    }
+
+    .estado.disponible {
+      border-color: $color-success;
+      color: $color-success;
+    }
+
+    .estado.agotado {
+      border-color: $color-error;
+      color: $color-error;
+    }
+  }
+
+  .volver-carrusel-btn {
+    margin-top: 0.2rem;
+    width: fit-content;
+    text-decoration: none;
+    color: $color-text-light;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-weight: 700;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 0.6rem 1rem;
+    background: rgba(0, 0, 0, 0.35);
+    transition: all $transition-fast;
+
+    &:hover {
+      border-color: $color-accent;
+      color: $color-accent;
+      transform: translateY(-1px);
+    }
+  }
+
+}
+
+@include responsive(mobile) {
+  .home-hero-section,
+  .productos-grid-section,
+  .producto-detalle-seccion,
+  .footer-final-section {
+    min-height: 100svh;
+  }
+
+  .productos-grid-section {
+    padding-top: var(--header-offset, 96px);
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-bottom: 0.95rem;
+  }
+
+  .productos-grid-shell {
+    gap: 0.75rem;
+  }
+
+  .section-header {
+    .eyebrow {
+      font-size: 0.68rem;
+      margin-bottom: 0.35rem;
+    }
+
+    h2 {
+      font-size: clamp(1.15rem, 5.6vw, 1.5rem);
+      margin-bottom: 0.35rem;
+    }
+
+    p {
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+  }
+
+  .productos-grid {
+    grid-template-columns: 1fr;
+    gap: 0.62rem;
+  }
+
+  // En desktop la ultima tarjeta de una cantidad impar ocupa las dos columnas;
+  // en mobile la grilla es de una sola columna, asi que se anula ese span.
+  .producto-grid-card:last-child:nth-child(odd) {
+    grid-column: auto;
+    grid-template-columns: minmax(88px, 34%) 1fr;
+  }
+
+  .producto-grid-card {
+    grid-template-columns: minmax(88px, 34%) 1fr;
+    min-height: 132px;
+    border-radius: 14px;
+
+    .grid-content {
+      padding: 0.56rem;
+      gap: 0.28rem;
+
+      h3 {
+        font-size: 0.86rem;
+      }
+
+      p {
+        font-size: 0.72rem;
+        line-height: 1.32;
+        line-clamp: 2;
+        -webkit-line-clamp: 2;
+      }
+
+      .grid-meta {
+        .precio {
+          font-size: 0.9rem;
+        }
+
+        .stock {
+          font-size: 0.68rem;
+          padding: 0.18rem 0.48rem;
+        }
+      }
+    }
+  }
+
+  // El `padding-bottom` crece para reservar la franja del chevron inferior
+  // `.detalle-chevron-next`: el contenido sigue anclado al fondo, pero ya no
+  // toca el borde inferior.
+  .producto-detalle-seccion {
+    padding: var(--header-offset, 96px) 0.8rem 3.5rem;
+
+    .detalle-contenido {
+      border-radius: 14px;
+      padding: 0.85rem;
+
+      h2 {
+        font-size: clamp(1.2rem, 6vw, 1.7rem);
+      }
+
+      .detalle-descripcion {
+        margin-bottom: 0.8rem;
+        line-height: 1.5;
+      }
+
+      .detalle-meta {
+        gap: 0.42rem;
+
+        .pill {
+          font-size: 0.73rem;
+          padding: 0.28rem 0.58rem;
+        }
+      }
+    }
+  }
+
+  .footer-final-section {
+    padding-top: var(--header-offset, 96px);
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-bottom: 0.95rem;
+
+    .footer-shell {
+      gap: 0.75rem;
+    }
+
+    .footer-header {
+      .eyebrow {
+        font-size: 0.68rem;
+        margin-bottom: 0.35rem;
+      }
+
+      h2 {
+        font-size: clamp(1.15rem, 5.6vw, 1.5rem);
+        margin-bottom: 0.35rem;
+      }
+
+      p {
+        font-size: 0.82rem;
+        line-height: 1.45;
+      }
+    }
+
+    .footer-producto-link:last-child:nth-child(odd) {
+      grid-column: auto;
+    }
+
+    .footer-productos-grid {
+      grid-template-columns: 1fr;
+      gap: 0.6rem;
+    }
+
+    .footer-producto-card {
+      grid-template-columns: 78px 1fr;
+      gap: 0.58rem;
+      padding: 0.56rem;
+    }
+
+    .footer-producto-img {
+      width: 78px;
+      height: 78px;
+      border-radius: 10px;
+    }
+
+    .footer-producto-body {
+      h3 {
+        font-size: 0.86rem;
+        margin-bottom: 0.3rem;
+      }
+
+      p {
+        font-size: 0.76rem;
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    .footer-producto-meta {
+      gap: 0.3rem;
+
+      .pill {
+        font-size: 0.68rem;
+        padding: 0.2rem 0.44rem;
+      }
+    }
+
+    .volver-carrusel-btn {
+      font-size: 0.78rem;
+      padding: 0.46rem 0.78rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .productos-grid {
+    gap: 0.55rem;
+  }
+
+  .producto-grid-card {
+    grid-template-columns: minmax(88px, 34%) 1fr;
+  }
+
+  // `padding-bottom` y chevron se reducen en proporción a la medida (ver bloque
+  // `responsive(mobile)` de arriba).
+  .producto-detalle-seccion {
+    padding: var(--header-offset, 64px) 0.7rem 3.2rem;
+
+    .detalle-chevron-next {
+      bottom: 0.32rem;
+      width: 2.35rem;
+      height: 2.35rem;
+      font-size: 0.9rem;
+    }
+  }
+
+  .footer-final-section {
+    padding-top: var(--header-offset, 64px);
+  }
+}
+
+@media (max-width: 360px) {
+  .productos-grid-section {
+    padding-top: var(--header-offset, 58px);
+    padding-left: 0.52rem;
+    padding-right: 0.52rem;
+    padding-bottom: 0.7rem;
+    gap: 0.55rem;
+  }
+
+  .section-header {
+    .eyebrow {
+      font-size: 0.62rem;
+      margin-bottom: 0.28rem;
+      letter-spacing: 0.1em;
+    }
+
+    h2 {
+      font-size: clamp(1rem, 6.6vw, 1.26rem);
+      margin-bottom: 0.25rem;
+    }
+
+    p {
+      font-size: 0.74rem;
+      line-height: 1.35;
+    }
+  }
+
+  .productos-grid {
+    gap: 0.42rem;
+  }
+
+  .producto-grid-card {
+    grid-template-columns: minmax(72px, 34%) 1fr;
+    min-height: 100px;
+
+    .grid-content {
+      padding: 0.42rem;
+      gap: 0.2rem;
+
+      h3 {
+        font-size: 0.77rem;
+      }
+
+      p {
+        font-size: 0.66rem;
+      }
+
+      .grid-meta {
+        gap: 0.25rem;
+
+        .precio {
+          font-size: 0.81rem;
+        }
+
+        .stock {
+          font-size: 0.62rem;
+          padding: 0.14rem 0.38rem;
+        }
+      }
+    }
+  }
+
+  // `padding-bottom` y chevron se reducen en proporción a la medida (ver bloque
+  // `responsive(mobile)` de arriba).
+  .producto-detalle-seccion {
+    padding: var(--header-offset, 58px) 0.55rem 2.9rem;
+
+    .detalle-chevron-next {
+      bottom: 0.26rem;
+      width: 2.15rem;
+      height: 2.15rem;
+      font-size: 0.82rem;
+    }
+
+    .detalle-contenido {
+      padding: 0.68rem;
+      border-radius: 12px;
+
+      h2 {
+        margin-bottom: 0.45rem;
+        font-size: clamp(1.02rem, 6.3vw, 1.35rem);
+      }
+
+      .detalle-descripcion {
+        margin-bottom: 0.6rem;
+        font-size: 0.76rem;
+        line-height: 1.4;
+      }
+
+      .detalle-meta {
+        gap: 0.3rem;
+
+        .pill {
+          font-size: 0.66rem;
+          padding: 0.2rem 0.44rem;
+        }
+      }
+    }
+  }
+
+  .footer-final-section {
+    padding-top: var(--header-offset, 58px);
+    padding-left: 0.55rem;
+    padding-right: 0.55rem;
+    padding-bottom: 0.7rem;
+
+    .footer-shell {
+      gap: 0.52rem;
+    }
+
+    .footer-header {
+      .eyebrow {
+        font-size: 0.62rem;
+      }
+
+      h2 {
+        font-size: clamp(0.98rem, 6vw, 1.22rem);
+      }
+
+      p {
+        font-size: 0.74rem;
+      }
+    }
+
+    .footer-productos-grid {
+      gap: 0.45rem;
+    }
+
+    .footer-producto-card {
+      grid-template-columns: 64px 1fr;
+      gap: 0.45rem;
+      padding: 0.45rem;
+      border-radius: 12px;
+    }
+
+    .footer-producto-img {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+    }
+
+    .footer-producto-body {
+      h3 {
+        font-size: 0.76rem;
+      }
+
+      p {
+        font-size: 0.68rem;
+        margin-bottom: 0.35rem;
+      }
+    }
+
+    .footer-producto-meta {
+      gap: 0.2rem;
+
+      .pill {
+        font-size: 0.6rem;
+        padding: 0.14rem 0.32rem;
+      }
+    }
+
+    .volver-carrusel-btn {
+      font-size: 0.7rem;
+      padding: 0.34rem 0.6rem;
+      gap: 0.35rem;
+    }
+  }
+}

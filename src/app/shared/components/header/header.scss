@@ -1,0 +1,374 @@
+@use '../../../../assets/styles/variables' as *;
+@use '../../../../assets/styles/mixins' as *;
+
+.main-header {
+  position: fixed;
+  top: 0.7rem;
+  left: clamp(0.7rem, 2.2vw, 1.6rem);
+  right: clamp(0.7rem, 2.2vw, 1.6rem);
+  z-index: $z-header;
+  border-radius: 22px;
+  padding: 0.78rem 1.1rem;
+  background:
+    linear-gradient(112deg, rgba(20, 10, 6, 0.56) 0%, rgba(60, 39, 26, 0.44) 100%),
+    rgba(28, 15, 9, 0.26);
+  backdrop-filter: blur(16px) saturate(145%);
+  -webkit-backdrop-filter: blur(16px) saturate(145%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.28);
+  transition: transform $transition-fast, box-shadow $transition-fast, border-color $transition-fast;
+  font-family: 'Manrope', 'Roboto', sans-serif;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border-radius: 20px;
+    pointer-events: none;
+    background: linear-gradient(100deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 55%);
+    opacity: 0.42;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, 0.28);
+    box-shadow: 0 20px 38px rgba(0, 0, 0, 0.34);
+  }
+}
+
+.header-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  min-height: 58px;
+  margin: 0 auto;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+
+  // El logo es un acceso directo al carrusel. El ancla no debe alterar el
+  // layout de flex ni heredar estilos de link.
+  .logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 16px;
+    transition: transform $transition-fast, box-shadow $transition-fast;
+
+    &:hover .logo-frame {
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.34);
+    }
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+
+    &:focus-visible {
+      outline: 2px solid $color-accent;
+      outline-offset: 3px;
+    }
+  }
+
+  .logo-frame {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    padding: 3px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.52) 0%, rgba(255, 255, 255, 0.14) 100%);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.26);
+  }
+
+  .logo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 13px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .brand-name {
+    color: $color-text-light;
+    font-family: 'Playfair Display', 'Times New Roman', serif;
+    font-size: clamp(1.05rem, 2.3vw, 1.65rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.03em;
+    margin: 0;
+    text-wrap: balance;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  }
+}
+
+.header-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-nav-link {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: $color-text-light;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition: transform $transition-fast, background $transition-fast, border-color $transition-fast, color $transition-fast;
+
+  i {
+    font-size: 0.95rem;
+    line-height: 1;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.42);
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent;
+    outline-offset: 3px;
+  }
+}
+
+.social-nav {
+  display: flex;
+  gap: 0.42rem;
+
+  .social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 13px;
+    transition: transform $transition-fast, background $transition-fast, border-color $transition-fast, color $transition-fast;
+
+    i {
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    &:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.22);
+      border-color: rgba(255, 255, 255, 0.42);
+      transform: translateY(-1px);
+    }
+
+    &.social-link--disabled {
+      opacity: 0.38;
+      cursor: default;
+      pointer-events: none;
+
+      &:hover {
+        transform: none;
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.24);
+        color: rgba(255, 255, 255, 0.95);
+      }
+    }
+  }
+}
+
+// Responsive móvil
+@include responsive(mobile) {
+  .main-header {
+    top: 0.5rem;
+    border-radius: 18px;
+    padding: 0.58rem 0.72rem;
+  }
+
+  .header-content {
+    min-height: 52px;
+  }
+
+  .logo-section {
+    gap: 0.58rem;
+
+    .logo-frame {
+      width: 44px;
+      height: 44px;
+      border-radius: 13px;
+    }
+
+    .logo {
+      border-radius: 10px;
+    }
+
+    .brand-name {
+      font-size: 0.84rem;
+      max-width: 140px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .social-nav {
+    gap: 0.25rem;
+
+    .social-link {
+      width: 34px;
+      height: 34px;
+
+      i {
+        font-size: 0.95rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .main-header {
+    top: 0.4rem;
+    left: 0.45rem;
+    right: 0.45rem;
+    border-radius: 14px;
+    padding: 0.46rem 0.55rem;
+    // Acople de altura ELIMINADO a propósito. Ese `min-height` solo existía
+    // porque se sacaban elementos del header y la barra podía quedar más baja
+    // que su `--header-offset`, dejando un hueco bajo la barra. Devueltas las
+    // redes, el header ya no se encoge: el acople es peso muerto y su único
+    // riesgo era dejar la barra MÁS alta que el offset reservado. No se toca
+    // el offset: sigue siendo 64px.
+  }
+
+  .header-content {
+    min-height: 44px;
+  }
+
+  .logo-section {
+    gap: 0.42rem;
+
+    .logo-frame {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      padding: 2px;
+    }
+
+    .logo {
+      border-radius: 8px;
+    }
+
+    .brand-name {
+      font-size: 0.74rem;
+      max-width: 118px;
+    }
+  }
+
+  .social-nav {
+    gap: 0.18rem;
+
+    .social-link {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+
+      i {
+        font-size: 0.86rem;
+      }
+    }
+  }
+
+  // A ≤480px el header queda en marca + ícono de Inicio: el texto del link se
+  // lleva el ancho y la barra pierde breathing room.
+  .header-nav-label {
+    display: none;
+  }
+
+  // El cliente revirtió el ocultado: las redes vuelven a verse a ≤480px. Se
+  // borra el `display: none` que las apagaba y con él el argumento de que el
+  // footer ya las cubría — decide tenerlas arriba, aunque se dupliquen.
+}
+
+@media (max-width: 360px) {
+  .main-header {
+    top: 0.3rem;
+    left: 0.3rem;
+    right: 0.3rem;
+    border-radius: 12px;
+    padding: 0.38rem 0.44rem;
+  }
+
+  .header-content {
+    min-height: 38px;
+  }
+
+  .logo-section {
+    gap: 0.34rem;
+
+    .logo-frame {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      padding: 1px;
+    }
+
+    .logo {
+      border-radius: 6px;
+    }
+
+    .brand-name {
+      font-size: 0.68rem;
+      max-width: 92px;
+      letter-spacing: 0.015em;
+    }
+  }
+
+  .social-nav {
+    gap: 0.14rem;
+
+    .social-link {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+
+      i {
+        font-size: 0.74rem;
+      }
+    }
+  }
+}
+
+// Escalón ultra-chico (≤200px): el header desaparece. Va al final a propósito
+// (misma especificidad, gana el último).
+//
+// El componente no estiliza su host —`header.ts` no declara `host`—, así que el
+// selector es la clase raíz del template, `.main-header`. `app-header` queda
+// como elemento inline vacío y sin altura, así que la barra sale del flujo por
+// completo.
+//
+// Razón: a esta medida la barra fija se superpone al contenido Y además la
+// recorta el `overflow-x: hidden` de `html, body`. Esconderla obliga a anular
+// también `--header-offset` (bloque equivalente en `styles.scss`), porque todas
+// las secciones reservan `padding-top: var(--header-offset)` para despejarla:
+// sin el `0px` quedaría un hueco muerto de hasta 58px arriba de cada sección.
+//
+// Trade-off aceptado: a ≤200px no hay navegación en absoluto. Es una medida
+// degenerada, no un diseño; el header plegable es una tanda posterior aparte.
+@media (max-width: 200px) {
+  .main-header {
+    display: none;
+  }
+}

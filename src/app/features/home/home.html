@@ -1,0 +1,155 @@
+<div class="home-snap-layout">
+  <section #snapSection id="inicio-carrusel" class="home-hero-section snap-section">
+    <app-carousel [productos]="productosDisponibles"></app-carousel>
+  </section>
+
+  <section #snapSection id="productos-grid" class="productos-grid-section snap-section">
+    <div class="productos-grid-shell">
+      <div class="section-header">
+        <p class="eyebrow">Catalogo destacado</p>
+        <h2>Nuestros productos listos para ti</h2>
+        <p>
+          Explora el portafolio completo y baja para ver cada producto en una vista
+          dedicada con toda su informacion.
+        </p>
+      </div>
+
+      <div class="productos-grid">
+        @for (producto of productosGrid; track producto.id) {
+          <a class="producto-grid-card" [attr.href]="'#detalle-producto-' + producto.id">
+            <img
+              [src]="getImagenUrl(producto.imagenUrl)"
+              [alt]="producto.titulo"
+              class="grid-image"
+              loading="lazy"
+              (error)="onImageError($event)"
+            />
+
+            <div class="grid-content">
+              <h3>{{ producto.titulo }}</h3>
+              <p>{{ producto.descripcion }}</p>
+
+              <div class="grid-meta">
+                <span class="precio">${{ formatearPrecio(producto.precio) }}</span>
+                <span class="stock">Stock: {{ producto.cantidadDisponible }}</span>
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="productos-detalle-wrapper">
+    @for (producto of productosDisponibles; track producto.id; let i = $index) {
+      <article #snapSection class="producto-detalle-seccion snap-section" [id]="'detalle-producto-' + producto.id">
+        <img
+          [src]="getImagenUrl(producto.imagenUrl)"
+          [alt]="producto.titulo"
+          class="detalle-fondo"
+          loading="lazy"
+          (error)="onImageError($event)"
+        />
+
+        <div class="detalle-capa"></div>
+
+        <nav class="detalle-thumbnails" aria-label="Ir a otro producto">
+          @for (otro of productosDisponibles; track otro.id) {
+            <a
+              class="thumbnail-item"
+              [class.active]="esDetalleActivo(otro.id)"
+              [attr.href]="'#detalle-producto-' + otro.id"
+              [attr.aria-label]="'Ir a ' + otro.titulo"
+              [attr.aria-current]="esDetalleActivo(otro.id) ? 'page' : null"
+            >
+              <img
+                [src]="getImagenUrl(otro.imagenUrl)"
+                [alt]="otro.titulo"
+                class="thumbnail-image"
+                loading="lazy"
+                (error)="onImageError($event)"
+              />
+              <span class="thumbnail-label">{{ otro.titulo }}</span>
+            </a>
+          }
+        </nav>
+
+        <div class="detalle-contenido">
+          <p class="detalle-numero">Producto {{ i + 1 }}</p>
+          <h2>{{ producto.titulo }}</h2>
+          <p class="detalle-descripcion">{{ producto.descripcion }}</p>
+
+          <div class="detalle-meta">
+            <span class="pill precio">${{ formatearPrecio(producto.precio) }}</span>
+            <span class="pill">Categoria: {{ producto.categoria }}</span>
+            <span class="pill">Disponibles: {{ producto.cantidadDisponible }}</span>
+            <span class="pill estado" [class.disponible]="producto.disponible" [class.agotado]="!producto.disponible">
+              {{ producto.disponible ? 'Disponible' : 'Agotado' }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Chevron inferior "siguiente" (solo mobile) -->
+        <!-- El rail lateral esta oculto en esta medida, asi que este enlace es la -->
+        <!-- unica forma visible de pasar al producto siguiente. No lleva scroll en -->
+        <!-- JS: el `scroll-behavior: smooth` y el `scroll-snap` globales resuelven -->
+        <!-- el desplazamiento al resolver el `href`. En el ultimo producto no se -->
+        <!-- renderiza: no hay seccion destino. -->
+        @if (i < productosDisponibles.length - 1) {
+          <a class="detalle-chevron-next"
+             [attr.href]="'#detalle-producto-' + productosDisponibles[i + 1].id"
+             aria-label="Siguiente producto">
+            <i class="fa-solid fa-chevron-down detalle-chevron-icon" aria-hidden="true"></i>
+          </a>
+        }
+      </article>
+    }
+  </section>
+
+  <footer #snapSection id="resumen-final" class="footer-final-section snap-section">
+    <div class="footer-shell">
+      <div class="footer-header">
+        <p class="eyebrow">Resumen final</p>
+        <h2>Todos los productos en detalle</h2>
+        <p>
+          Esta vista concentra la informacion principal del catalogo para consulta rapida.
+        </p>
+      </div>
+
+      <div class="footer-productos-grid">
+        @for (producto of productosDisponibles; track producto.id) {
+          <a class="footer-producto-link" [attr.href]="'#detalle-producto-' + producto.id">
+            <article class="footer-producto-card">
+              <img
+                [src]="getImagenUrl(producto.imagenUrl)"
+                [alt]="producto.titulo"
+                class="footer-producto-img"
+                loading="lazy"
+                (error)="onImageError($event)"
+              />
+
+              <div class="footer-producto-body">
+                <h3>{{ producto.titulo }}</h3>
+                <p>{{ producto.descripcion }}</p>
+
+                <div class="footer-producto-meta">
+                  <span class="pill precio">${{ formatearPrecio(producto.precio) }}</span>
+                  <span class="pill">Categoria: {{ producto.categoria }}</span>
+                  <span class="pill">Stock: {{ producto.cantidadDisponible }}</span>
+                  <span class="pill estado" [class.disponible]="producto.disponible" [class.agotado]="!producto.disponible">
+                    {{ producto.disponible ? 'Disponible' : 'Agotado' }}
+                  </span>
+                </div>
+              </div>
+            </article>
+          </a>
+        }
+      </div>
+
+      <a class="volver-carrusel-btn" href="#inicio-carrusel" aria-label="Volver al carrusel principal">
+        <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+        Volver al carrusel
+      </a>
+    </div>
+  </footer>
+</div>

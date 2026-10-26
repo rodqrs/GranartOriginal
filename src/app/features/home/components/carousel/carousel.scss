@@ -1,0 +1,714 @@
+@use '../../../../../assets/styles/variables' as *;
+@use '../../../../../assets/styles/mixins' as *;
+
+// ==================== CONTENEDOR PRINCIPAL ====================
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+
+  @include responsive(mobile) {
+    height: 100svh;
+  }
+}
+
+.carousel-slides {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+// ==================== CADA SLIDE INDIVIDUAL ====================
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.55s ease-in-out;
+  pointer-events: none;
+
+  &.active {
+    opacity: 1;
+    z-index: $z-carousel-image;
+    pointer-events: auto;
+  }
+}
+
+// ==================== IMAGEN DE FONDO (SIN BLUR) ====================
+.slide-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+// ==================== OVERLAY POSICIONAMIENTO ====================
+.slide-overlay {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 600px;
+  z-index: $z-carousel-overlay;
+
+  @include responsive(mobile) {
+    left: 2%;
+    right: 2%;
+    transform: none;
+    // Mínimo Bajado a propósito. El mínimo viejo (6.4rem) estaba calibrado para
+    // reservar la banda del chevron + los dots; con ambos controles fuera, esa
+    // reserva sobra y en viewports MUY bajos (el mínimo manda cuando `vh` es
+    // chico) dejaba sólo ~58px para una tarjeta de ~130px, que desbordaba hacia
+    // arriba y la recortaba el `overflow: hidden`. En un teléfono normal manda el
+    // MÁXIMO, así que ahí no cambia nada.
+    bottom: clamp(1.5rem, 20vh, 8rem);
+    max-width: none;
+  }
+}
+
+// ==================== CONTENEDOR TEXTO CON GLASSMORPHISM ====================
+// BLUR SOLO AQUÍ - La imagen de fondo NO tiene blur
+.text-container {
+  @include glassmorphism(0.15, 20px);
+  padding: 2rem;
+  border-radius: 16px;
+  animation: fadeInUp 0.8s ease-out;
+
+  @include responsive(mobile) {
+    padding: 1rem;
+    border-radius: 10px;
+
+    .producto-titulo {
+      margin-bottom: 0.65rem;
+      font-size: clamp(1.3rem, 6.5vw, 2rem);
+    }
+
+    .producto-descripcion {
+      margin-bottom: 0.85rem;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      overflow: hidden;
+    }
+
+    .producto-info {
+      gap: 0.6rem;
+
+      .disponibilidad {
+        padding: 0.34rem 0.7rem;
+        font-size: 0.74rem;
+      }
+    }
+
+    .ver-detalle-link {
+      margin-top: 0.7rem;
+      font-size: 0.78rem;
+    }
+  }
+
+  // Título del producto
+  .producto-titulo {
+    font-size: clamp(1.75rem, 5vw, 3.5rem);
+    font-weight: 700;
+    color: $color-text-light;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+  }
+
+  // Descripción del producto
+  .producto-descripcion {
+    font-size: clamp(0.9rem, 2vw, 1.125rem);
+    color: rgba(255, 255, 255, 0.95);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+  }
+
+  // Información precio y disponibilidad
+  .producto-info {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .precio {
+      font-size: clamp(1.25rem, 3vw, 1.75rem);
+      font-weight: 700;
+      color: $color-accent;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    .disponibilidad {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: clamp(0.8rem, 1.5vw, 0.95rem);
+      font-weight: 600;
+      transition: all $transition-fast;
+
+      &.disponible {
+        background: rgba(81, 207, 102, 0.25);
+        color: $color-success;
+        border: 1px solid $color-success;
+      }
+
+      &.agotado {
+        background: rgba(255, 107, 107, 0.25);
+        color: $color-error;
+        border: 1px solid $color-error;
+      }
+    }
+  }
+
+  .ver-detalle-link {
+    display: inline-flex;
+    margin-top: 1.15rem;
+    color: $color-text-light;
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.55);
+    padding-bottom: 0.15rem;
+    transition: all $transition-fast;
+
+    &:hover {
+      color: $color-accent;
+      border-bottom-color: $color-accent;
+    }
+  }
+}
+
+// ==================== MINIATURAS LATERALES ====================
+  .carousel-thumbnails {
+    position: absolute;
+    left: 0.8rem;
+    top: 7rem;
+    transform: none;
+    z-index: $z-carousel-controls;
+    display: flex;
+    flex-direction: column;
+    gap: 0.42rem;
+    width: min(190px, 26vw);
+    max-height: calc(100vh - 8.5rem);
+    overflow-y: auto;
+    padding: 0.45rem;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.33);
+    backdrop-filter: blur(10px);
+
+    // El scroll interno del rail se anima siempre: en escritorio baja al
+    // producto activo y en mobile recorre la tira horizontal.
+    //
+    // Sin cap propio de altura: el rail muestra la lista completa (8 items),
+    // igual que los rails de las secciones de detalle. Cuando el viewport es
+    // bajo, el `max-height: calc(100vh - 8.5rem)` recorta la lista pero la
+    // ventana ya sigue sola al producto activo (`centrarThumbnailActivo()` en
+    // `carousel.ts`), así que ningún item queda inalcanzable.
+    scroll-behavior: smooth;
+  
+    .thumbnail-item {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 0.38rem;
+      align-items: center;
+      text-decoration: none;
+      color: $color-text-light;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 10px;
+      padding: 0.28rem;
+      min-height: 78px;
+      transition: all $transition-fast;
+  
+      &:hover {
+        border-color: rgba(255, 255, 255, 0.85);
+        transform: translateX(2px);
+      }
+  
+      &.active {
+        border-color: $color-accent;
+        box-shadow: 0 0 14px rgba(255, 215, 0, 0.28);
+      }
+  
+      .thumbnail-image {
+        width: 52px;
+        height: 76px;
+        border-radius: 8px;
+        object-fit: cover;
+      }
+  
+      .thumbnail-label {
+        font-size: 0.76rem;
+        line-height: 1.2;
+        display: -webkit-box;
+        line-clamp: 3;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+    }
+
+  // En mobile el rail lateral se oculta por completo: ni columna ni tira
+  // horizontal. El espacio que liberaba lo toma el chevron inferior
+  // (`.carousel-chevron-next`), que pasa a ser la unica navegacion visible
+  // entre slides.
+  @include responsive(mobile) {
+    display: none;
+  }
+}
+
+// ==================== FLECHAS DE NAVEGACIÓN ====================
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: $z-carousel-controls;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: $color-text-light;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: all $transition-fast;
+  // Centrado explícito del ícono. El botón no lo tenía: el glifo quedaba
+  // descentrado dentro del círculo porque dependía del centrado implícito del
+  // UA y arrastraba su `padding` por defecto (≈1px 6px). `.carousel-chevron-next`
+  // ya usa este mismo trío; se replica acá para que ambos controles coincidan.
+  display: grid;
+  place-items: center;
+  padding: 0;
+
+  // En desktop con mouse se mantienen ocultas hasta hover.
+  @media (hover: hover) and (pointer: fine) {
+    opacity: 0;
+
+    .carousel-container:hover & {
+      opacity: 1;
+    }
+  }
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  &.prev {
+    left: calc(0.8rem + min(190px, 26vw) + 0.9rem);
+
+    @include responsive(mobile) {
+      left: 1rem;
+    }
+  }
+
+  &.next {
+    right: 2rem;
+
+    @include responsive(mobile) {
+      right: 1rem;
+    }
+  }
+
+  mat-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    // Sin esto el glifo se apoya en una caja de línea más alta que su propio
+    // alto y queda desplazado hacia arriba dentro del círculo. Unitless: escala
+    // solo con cada `font-size` de breakpoint, no hace falta repetirlo.
+    line-height: 1;
+  }
+
+  @include responsive(mobile) {
+    width: 40px;
+    height: 40px;
+
+    mat-icon {
+      font-size: 1.5rem;
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+}
+
+// ==================== CHEVRON INFERIOR "SIGUIENTE" (SOLO MOBILE) ====================
+// Histórico: el párrafo de abajo es la calibración original del chevron, escrita
+// cuando este control SÍ se mostraba. Queda desactualizado a propósito (cita
+// el `bottom` viejo del overlay y una banda de indicadores que ya no existe en
+// móvil); se conserva como referencia de los números, no como descripción del
+// estado actual. Lo que manda hoy es el aviso de abajo.
+//
+// Con el rail oculto, la banda entre el borde inferior del `.slide-overlay`
+// (`bottom: clamp(6.4rem, 20vh, 8rem)`, mínimo ya bajado a 1.5rem) y los
+// `.carousel-indicators` queda
+// libre: el chevron se ancla al centro de esa banda para no superponerse con
+// ninguno de los dos. Los tres `bottom` de abajo están calibrados contra los
+// valores reales de cada bloque: `9.5vh` replica el termino del overlay para
+// seguirlo en viewports altos, y el minimo/maximo de cada `clamp` está elegido
+// para que el borde superior del boton nunca alcance el `bottom` del
+// `.slide-overlay` de ese mismo bloque, ni el borde inferior los indicadores.
+// DESACTIVADO por pedido del cliente: el avance en mobile lo dan las dos
+// flechas inferiores (← →), así que este chevron no se muestra. Se conservan
+// el HTML, el getter `haySiguiente()` y estas reglas a propósito: el trabajo
+// de la sesión anterior no está commiteado y borrarlo sería irreversible.
+// Para reactivarlo alcanza con reponer `display: grid` en el bloque de abajo.
+.carousel-chevron-next {
+  display: none;
+
+  @include responsive(mobile) {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(4rem, 9.5vh, 4.85rem);
+    transform: translateX(-50%);
+    z-index: $z-carousel-controls;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(10px);
+    color: $color-text-light;
+    font-size: 1.05rem;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      border-color: $color-accent;
+      color: $color-accent;
+    }
+  }
+
+// Viewports anchos pero bajos (p.ej. 768x600): la banda entre el overlay y
+  // los indicadores se reduce a ~47px y un boton de 44px no entra con holgura.
+  // Se achica el control en vez de dejar que solape el `.slide-overlay`.
+//
+// El `max-width: 768px` es explícito a propósito: este bloque es hermano del
+// de mobile (no está anidado), así que sin ese tope se aplicaría también por
+// encima de 768px. Hoy es inofensivo solo porque la regla base es
+// `display: none` y nada más lo reactiva; sin ese tope es una trampa latente
+// para el próximo que suba el breakpoint del chevron.
+  @media (min-width: 481px) and (max-width: 768px) and (max-height: 620px) {
+    bottom: 3.8rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 0.88rem;
+  }
+
+  @media (max-width: 480px) {
+    bottom: clamp(2.2rem, 9vh, 3.05rem);
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 360px) {
+    bottom: clamp(1.5rem, 7vh, 3rem);
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 0.88rem;
+  }
+}
+
+// La animacion va en el icono, no en el boton: el `transform` del boton ya
+// esta en uso por `translateX(-50%)` y la animacion lo sobrescribiria.
+.carousel-chevron-icon {
+  display: block;
+  animation: carouselChevronBob 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel-chevron-icon {
+    animation: none;
+  }
+}
+
+// ==================== INDICADORES TIPO NEON (BARRAS HORIZONTALES) ====================
+.carousel-indicators {
+  position: absolute;
+  bottom: 1.55rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  z-index: $z-carousel-controls;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.75rem 1.25rem;
+  border-radius: 30px;
+  backdrop-filter: blur(10px);
+
+  @include responsive(mobile) {
+    bottom: 3.8%;
+    padding: 0.5rem 1rem;
+  }
+}
+
+// Cada indicador individual (BARRA HORIZONTAL - NO CÍRCULO)
+.indicator {
+  width: 60px; // Ancho base
+  height: 4px;
+  background: rgba(255, 255, 255, 0.4);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all $transition-fast;
+  padding: 0;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.6);
+    transform: scaleY(1.5);
+  }
+
+  &.active {
+    background: $color-text-light;
+    width: 80px; // Más ancho cuando está activo
+    height: 5px;
+  }
+
+  @include responsive(mobile) {
+    width: 40px;
+
+    &.active {
+      width: 60px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .slide-overlay {
+    left: 1.6%;
+    right: 1.6%;
+    bottom: clamp(1.2rem, 18vh, 7rem);
+  }
+
+  .carousel-arrow {
+    width: 34px;
+    height: 34px;
+    top: 44%;
+
+    mat-icon {
+      font-size: 1.2rem;
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+  }
+
+  .carousel-thumbnails {
+    display: none;
+  }
+
+  .carousel-indicators {
+    bottom: 0.4rem;
+    padding: 0.35rem 0.6rem;
+    gap: 0.35rem;
+  }
+
+  .indicator {
+    width: 26px;
+    height: 3px;
+
+    &.active {
+      width: 38px;
+      height: 4px;
+    }
+  }
+}
+
+@media (max-width: 360px) {
+  .slide-overlay {
+    left: 1.2%;
+    right: 1.2%;
+    bottom: clamp(1rem, 16vh, 5.8rem);
+  }
+
+  .text-container {
+    padding: 0.75rem;
+    border-radius: 9px;
+
+    .producto-titulo {
+      font-size: clamp(1.05rem, 6.2vw, 1.35rem);
+      margin-bottom: 0.5rem;
+    }
+
+    .producto-descripcion {
+      font-size: 0.72rem;
+      margin-bottom: 0.55rem;
+      -webkit-line-clamp: 1;
+      line-clamp: 1;
+    }
+
+    .producto-info {
+      gap: 0.42rem;
+
+      .precio {
+        font-size: 0.9rem;
+      }
+
+      .disponibilidad {
+        padding: 0.26rem 0.55rem;
+        font-size: 0.66rem;
+      }
+    }
+
+    .ver-detalle-link {
+      margin-top: 0.45rem;
+      font-size: 0.68rem;
+    }
+  }
+
+  .carousel-arrow {
+    width: 30px;
+    height: 30px;
+
+    mat-icon {
+      font-size: 1rem;
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+
+  .carousel-thumbnails {
+    display: none;
+  }
+
+  .carousel-indicators {
+    bottom: 0.22rem;
+    padding: 0.28rem 0.45rem;
+    gap: 0.24rem;
+  }
+
+  .indicator {
+    width: 20px;
+    height: 2px;
+
+    &.active {
+      width: 30px;
+      height: 3px;
+    }
+  }
+}
+
+// ==================== CONTROLES EN MÓVIL (SOLO ≤768px) ====================
+// En móvil el avance lo dan DOS flechas simétricas ancladas al pie, `[←]` a la
+// izquierda y `[→]` a la derecha; los indicadores se apagan aparte. Ya no hay
+// chevron: el cliente pidió el par de flechas y el chevron quedó desactivado
+// (ver `.carousel-chevron-next`).
+//
+// Bloque deliberadamente DESPUÉS de los escalones de 480px y 360px: a misma
+// especificidad gana el último, y así el `top: auto` de acá pisa el
+// `top: 44%` que esos bloques fijan sobre `.carousel-arrow`. Desktop no se
+// toca: todo lo de acá vive dentro del `max-width`.
+
+@media (max-width: 768px) {
+  // Los indicadores se van en móvil. Con 7 productos el bloque mide ≈187px
+  // sobre un viewport de 320px (6 barras de 20px + la activa de 30px, más 6
+  // gaps de 0.24rem y el padding del contenedor) — cerca de dos tercios del
+  // ancho gastados en una barra decorativa que compite por el espacio del
+  // pulgar.
+  .carousel-indicators {
+    display: none;
+  }
+
+  // `.prev` pasa al pie junto a `.next`, y las dos quedan simétricas en la
+  // misma fila inferior, al alcance del pulgar: [←] ... [→]. Ninguna se oculta:
+  // con el rail y los indicadores fuera, son los dos únicos controles de avance.
+  //
+  // Se reposicionan con `top: auto` + `bottom` en vez de recalcular el `top`
+  // porcentual: el `bottom` replica EXACTAMENTE el clamp calibrado de
+  // `.carousel-chevron-next` en cada escalón, así que las dos comparten su
+  // banda libre entre el borde inferior del `.slide-overlay` y el piso del
+  // carousel, y no pueden pisar el texto ni el contenido de abajo.
+  // `transform` se anula porque la base usa `translateY(-50%)`; el hover sólo
+  // escala.
+  .carousel-arrow.prev {
+    top: auto;
+    bottom: clamp(4rem, 9.5vh, 4.85rem);
+    left: 1rem;
+    transform: none;
+    // El reveal por hover de la base es `(hover: hover) and (pointer: fine)`,
+    // o sea desktop. En móvil real ya no aplica, pero se anula acá para que
+    // el control sea visible también en una ventana angosta con mouse.
+    opacity: 0.85;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  // Espejo exacto de `.prev` en el mismo escalón: mismo `bottom`, misma banda y
+  // mismo `opacity`, sólo se voltea el anclaje horizontal.
+  .carousel-arrow.next {
+    top: auto;
+    bottom: clamp(4rem, 9.5vh, 4.85rem);
+    right: 1rem;
+    transform: none;
+    opacity: 0.85;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  // Escalón espejo del chevron para viewport ancho pero bajo (p.ej. 768x600).
+  // Cada `bottom` se aplica a las DOS flechas para que no se separen.
+  @media (min-width: 481px) and (max-width: 768px) and (max-height: 620px) {
+    .carousel-arrow.prev {
+      bottom: 3.8rem;
+    }
+
+    .carousel-arrow.next {
+      bottom: 3.8rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .carousel-arrow.prev {
+      bottom: clamp(2.2rem, 9vh, 3.05rem);
+    }
+
+    .carousel-arrow.next {
+      bottom: clamp(2.2rem, 9vh, 3.05rem);
+    }
+  }
+
+  @media (max-width: 360px) {
+    .carousel-arrow.prev {
+      bottom: clamp(1.5rem, 7vh, 3rem);
+    }
+
+    .carousel-arrow.next {
+      bottom: clamp(1.5rem, 7vh, 3rem);
+    }
+  }
+}
+
+// ==================== ANIMACIÓN DE ENTRADA PARA TEXTO ====================
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ==================== BAJADA SUAVE DEL CHEVRON DE NAVEGACIÓN ====================
+// Oscilación vertical corta para indicar "hay más abajo". Es la animación del
+// carousel, por eso lleva prefijo propio y no colisiona con `fadeInUp`.
+@keyframes carouselChevronBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
