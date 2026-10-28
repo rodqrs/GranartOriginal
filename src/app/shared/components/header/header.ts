@@ -19,6 +19,6 @@ import { SOCIAL_LINKS, SocialLink } from '../../social/social-links';
   styleUrl: './header.scss'
 })
 export class Header {
-  readonly nombreEmpresa = 'Café & Cacao Artesanal';
+  readonly nombreEmpresa = 'Granart';
   readonly redesSociales: readonly SocialLink[] = SOCIAL_LINKS;
 }

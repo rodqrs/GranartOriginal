@@ -22,6 +22,6 @@ import { SOCIAL_LINKS, SocialLink } from '../../social/social-links';
 })
 export class Footer {
   readonly anio = new Date().getFullYear();
-  readonly nombreEmpresa = 'Café & Cacao Artesanal';
+  readonly nombreEmpresa = 'Granart';
   readonly redesSociales: readonly SocialLink[] = SOCIAL_LINKS;
 }
