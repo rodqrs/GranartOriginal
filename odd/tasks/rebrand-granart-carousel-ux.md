@@ -22,6 +22,8 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
 - [x] T5 Carousel tablet fix v2 (user feedback on `542c6a7`): the rail cap truncated the sidebar — restore the FULL thumbnail sidebar (remove the tablet `max-height: calc(50vh - 9rem)` cap) and instead shift the slide info card to the right to open a clear corridor for the prev arrow between rail and card. Measured at 900px: rail x≈12.8-202.8, prev arrow currently x=32-82, card x=254-631. Target: arrow sits clear of BOTH (original slot ~x=217-267 works if card left edge ≥ ~300px at 769-1000px). Applies to tablet 769-1024px; desktop ≥1025px unchanged; mobile ≤768px has no carousel (hidden).
 - [x] T6 Mobile: hide the "Catalogo destacado" eyebrow (`home.html` line 9, the `.section-header .eyebrow` of `#productos-grid`) on mobile only — redundant and crowds the title. Keep the "Resumen final" eyebrow untouched.
 - [x] T7 Header: increase the "Granart" brand title font size — it currently renders smaller than the product card titles; it must read clearly larger (header component template/styles; check all breakpoints, keep mobile legible).
+- [x] T8 Header v2 (user feedback on T7): bump the "Granart" title a bit MORE at every breakpoint (all versions), keeping hierarchy and no header overflow. Current: desktop clamp(1.4rem,2.5vw,1.6rem); 390px 0.95rem; ≤480px 0.95rem; ≤360px 0.85rem — card h3 reference 0.86-1.12rem.
+- [ ] T9 Detail cards desktop fix: at desktop widths BELOW 1200px (1025-1199px), each product detail card (`.producto-detalle-seccion` content card with the detalle rail sidebar present) slides under the sidebar. Apply the same pattern as T5: shift the card right with a fixed band/offset so it clears the rail with a clean corridor at 1025-1199px; ≥1200px unchanged; verify no overflow against the right edge.
 
 ## Constraints
 - Comments in Spanish (project convention).
@@ -150,3 +152,20 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
       warnings (initial total 276.25 kB).
     - `npm test`: OK — Vitest 5 files / 21 tests passed.
     - `npm run lint`: OK — "All files pass linting."
+- Iteración 3 (rama `feat/title-detail-card-fix`, T8 + T9):
+  - T8 (este commit) feat(header): segundo agrande del titulo de marca en todos los breakpoints
+    - Styles-only en el header (template intacto): no runnable RED (stated
+      exception — CSS-only, no test harness asserts computed font sizes).
+      Escalones nuevos, +14-18% sobre cada valor de T7, jerarquía intacta
+      (h3 de tarjeta: 0.92-1.12rem desktop / 0.86 mobile / 0.77 ≤360px):
+      - Desktop `.brand-name`: `clamp(1.4rem, 2.5vw, 1.6rem)` →
+        `clamp(1.6rem, 2.9vw, 1.8rem)` (≥1.6rem en todo ≥769px, 1.8rem desde
+        ~993px ≈ 1.6x el máximo de tarjeta 1.12rem; 28.8px × 1.1 lh ≈ 32px
+        renderizados < 52px del marco del logo → la altura de la barra sigue
+        mandada por el logo).
+      - Mobile ≤768px: 1.05rem → 1.2rem (1.4x el h3 0.86rem; ~80px < cap
+        ellipsis 140px). ≤480px: 0.95rem → 1.1rem (1.28x; ~81px < 118px).
+        ≤360px: 0.85rem → 1rem (1.30x el h3 0.77rem; ~74px < 92px).
+      - Presupuesto de ancho a 390px: logo 34 + marca ~81 + pill Inicio ~31
+        + 3 redes (30px) ~96 + gaps/padding ≈ 275px < 390px — sin wrap ni
+        overflow, cap de 118px sin activarse.

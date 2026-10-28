@@ -97,11 +97,12 @@
     font-family: 'Playfair Display', 'Times New Roman', serif;
     // La marca debe leerse claramente MAYOR que los títulos de las tarjetas
     // de producto de la grilla (`clamp(0.92rem, 1.4vw, 1.12rem)` en
-    // home.scss). Piso 1.4rem y techo 1.6rem: el título marca queda ≥1.4rem
-    // en todo el rango ≥769px y en 1.6rem desde ~1025px, ~1.4x el máximo de
-    // las tarjetas. No agranda la barra: el marco del logo (52px) sigue
+    // home.scss). Segundo agrande a pedido del cliente: piso 1.6rem y techo
+    // 1.8rem — el título marca queda ≥1.6rem en todo el rango ≥769px y en
+    // 1.8rem desde ~993px, ~1.6x el máximo de las tarjetas. No agranda la
+    // barra: 1.8rem renderiza ~32px de alto y el marco del logo (52px) sigue
     // mandando la altura del header.
-    font-size: clamp(1.4rem, 2.5vw, 1.6rem);
+    font-size: clamp(1.6rem, 2.9vw, 1.8rem);
     font-weight: 700;
     line-height: 1.1;
     letter-spacing: 0.03em;
@@ -222,12 +223,11 @@
     }
 
     .brand-name {
-      // Antes medía 0.84rem: MENOS que el h3 de las tarjetas de la grilla
-      // en mobile (0.86rem) — la marca se veía más chica que los productos.
-      // 1.05rem la deja arriba sin crecer la barra (el logo de 44px sigue
-      // mandando) y sin acercarse al `max-width` de 140px ("Granart" mide
-      // ~70px a esta medida).
-      font-size: 1.05rem;
+      // El primer agrande (1.05rem) quedó corto a pedido del cliente: sube a
+      // 1.2rem, ~1.4x el h3 de las tarjetas en mobile (0.86rem). No crece la
+      // barra (el logo de 44px sigue mandando) ni se acerca al `max-width`
+      // de 140px ("Granart" mide ~80px a esta medida).
+      font-size: 1.2rem;
       max-width: 140px;
       white-space: nowrap;
       overflow: hidden;
@@ -284,8 +284,9 @@
 
     .brand-name {
       // Escalón sobre el bloque mobile: el h3 de las tarjetas sigue en
-      // 0.86rem a ≤480px, así que la marca no puede bajar de ahí.
-      font-size: 0.95rem;
+      // 0.86rem a ≤480px, así que la marca no puede bajar de ahí. 1.1rem
+      // (~81px de ancho real) entra holgado en el `max-width` de 118px.
+      font-size: 1.1rem;
       max-width: 118px;
     }
   }
@@ -343,9 +344,9 @@
     }
 
     .brand-name {
-      // Piso absoluto: 0.85rem sigue por encima del h3 de tarjeta a ≤360px
-      // (0.77rem) y entra en el `max-width` de 92px (~56px reales).
-      font-size: 0.85rem;
+      // Piso absoluto: 1rem sigue por encima del h3 de tarjeta a ≤360px
+      // (0.77rem) y entra en el `max-width` de 92px (~74px reales).
+      font-size: 1rem;
       max-width: 92px;
       letter-spacing: 0.015em;
     }
