@@ -21,7 +21,7 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
 - [x] T4 Scroll: remove full-screen snap behavior (`scroll-snap-type` in `src/styles.scss`, `.snap-section` rules in `src/app/features/home/home.scss`) and any JS in `src/app/features/home/home.ts` that forces scroll/focus between sections; keep smooth anchor scrolling for nav links.
 - [x] T5 Carousel tablet fix v2 (user feedback on `542c6a7`): the rail cap truncated the sidebar — restore the FULL thumbnail sidebar (remove the tablet `max-height: calc(50vh - 9rem)` cap) and instead shift the slide info card to the right to open a clear corridor for the prev arrow between rail and card. Measured at 900px: rail x≈12.8-202.8, prev arrow currently x=32-82, card x=254-631. Target: arrow sits clear of BOTH (original slot ~x=217-267 works if card left edge ≥ ~300px at 769-1000px). Applies to tablet 769-1024px; desktop ≥1025px unchanged; mobile ≤768px has no carousel (hidden).
 - [x] T6 Mobile: hide the "Catalogo destacado" eyebrow (`home.html` line 9, the `.section-header .eyebrow` of `#productos-grid`) on mobile only — redundant and crowds the title. Keep the "Resumen final" eyebrow untouched.
-- [ ] T7 Header: increase the "Granart" brand title font size — it currently renders smaller than the product card titles; it must read clearly larger (header component template/styles; check all breakpoints, keep mobile legible).
+- [x] T7 Header: increase the "Granart" brand title font size — it currently renders smaller than the product card titles; it must read clearly larger (header component template/styles; check all breakpoints, keep mobile legible).
 
 ## Constraints
 - Comments in Spanish (project convention).
@@ -119,3 +119,21 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
       (element hidden; rule was a no-op). The h2/p rules of the section header
       keep their mobile sizing, so spacing tightens only by the eyebrow's own
       0.35rem margin.
+  - T7 `<id>` feat(header): agrandar el titulo de marca sobre los titulos de tarjeta
+    - Styles-only in header component (template untouched — the `h1.brand-name`
+      node needed no markup change): no runnable RED (stated exception).
+      Reference sizes measured in home.scss: grid card h3 =
+      `clamp(0.92rem, 1.4vw, 1.12rem)` desktop / 0.86rem mobile / 0.77rem
+      ≤360px. The real regression was mobile: brand was 0.84rem (0.74 ≤480px,
+      0.68 ≤360px) — all BELOW the card titles. New sizes, all above card
+      titles at every step while keeping the bar height driven by the logo
+      (52/44/34/28px) and the brand inside its `max-width` ellipsis budget:
+      - Desktop `.brand-name`: `clamp(1.05rem, 2.3vw, 1.65rem)` →
+        `clamp(1.4rem, 2.5vw, 1.6rem)` (≥1.4rem on tablet floor, 1.6rem from
+        ~1025px ≈ 1.4x card max 1.12rem; 28px rendered < 52px logo frame →
+        bar height unchanged).
+      - Mobile ≤768px: 0.84rem → 1.05rem (> 0.86rem card; ~70px < 140px cap).
+      - ≤480px: 0.74rem → 0.95rem; ≤360px: 0.68rem → 0.85rem (> 0.77rem card;
+        ~56px < 92px cap). Width budget at 390px: logo 44 + brand ~70 +
+        Inicio pill ~34 + 3 social icons ~110 + gaps/padding ≈ 272px < 390px —
+        no wrap, no overflow.
