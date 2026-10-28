@@ -102,9 +102,19 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
   - BOUNDARY FIX (orchestrator, follow-up commit): at exactly 1199px the band did
     NOT apply — `matchMedia("(max-width: 1199px)")` false at innerWidth 1199
     (viewport width 1199.00000002 from float rounding). Changed to
-    `max-width: 1199.98px`; re-measured 1199 → card x=240-960, corridor 37px. Rule:
+    `max-width: 1199.98px`; re-measured 1199 → card x=240-960, corridor 37px.     Rule:
     half-pixel upper bounds for exclusive ranges.
   - T8 brand: 390px → 17.6px (1.2rem) vs card h3 13.76px; eyebrow still hidden.
+  - Delivery: merged to `main` and pushed (established auto-deploy flow).
+- Iteration 4 (detail band extended to tablet, 2026-10-28, orchestrator edit + browser check):
+  - Measured before: detail card x=124-884 at 1024px (79px under the rail); worse at
+    769/900px. Rail present from 769px (hidden ≤768px only).
+  - Fix: band media query extended `min-width: 1025px` → `769px`, and
+    `max-width: min(45rem, calc(100% - 12rem))` so the card shrinks to the
+    rail+padding remainder at narrower widths.
+  - Measured after: card underRail=false with corridor 27-37px at 769/900/1024/1025px
+    (card x=230-240, w=485-720, right gap 53-65px); ≥1200px unchanged; ≤768px unchanged
+    (rail hidden). Screenshot at 900px confirms clean separation.
   - Delivery: merged to `main` and pushed (established auto-deploy flow).
 - Iteración 2 (rama `feat/carousel-ux-iter2`):
   - T5 `861e3a6` fix(carousel): abrir corredor tablet corriendo la tarjeta y soltar el cap del rail
