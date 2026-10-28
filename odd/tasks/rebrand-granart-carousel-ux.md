@@ -34,6 +34,14 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
 ## Progress / evidence
 - Route: delegated direct (one writer, work-unit commits). Trigger: 4 tasks across 6+ non-trivial files.
 - 2026-10-28: feature doc created after live verification; implementation starting.
+- Follow-up fix `3acc4a9`: user chose to collapse the blank mobile hero. Root cause of
+  the leftover 844px blank area: a second `@include responsive(mobile)` block later in
+  home.scss re-set `min-height: 100svh` on `.home-hero-section`, overriding the earlier
+  `min-height: 0`. Removed `.home-hero-section` from that selector list. Verified:
+  hero height 0 at 390px, grid starts at viewport top (elementFromPoint mid-screen =
+  productos-grid-section). Build green.
+- Delivery: merged to `main` and pushed 2026-10-28 (user-approved); CI deploys to
+  https://rodqrs.github.io/GranartOriginal/.
 - 2026-10-28: implementation complete on `feat/rebrand-carousel-ux`. Work-unit commits:
   - T1 `37e46af` feat(brand): rename company to Granart across title, header and footer
     - RED first: added `header.spec.ts` / `footer.spec.ts` asserting "Granart" → 2 failed
