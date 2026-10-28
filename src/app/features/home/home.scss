@@ -16,6 +16,19 @@
 
 .home-hero-section {
   min-height: 100vh;
+
+  // En mobile el carrusel es ruido: se oculta y la seccion colapsa para que
+  // la grilla de productos sea lo primero visible. El `min-height: 0` anula
+  // el `100vh` base; con el carousel fuera la seccion queda a altura cero,
+  // asi que el ancla `#inicio-carrusel` (logo y "Inicio" del header) resuelve
+  // al tope de la pagina en vez de a un bloque vacio.
+  @include responsive(mobile) {
+    min-height: 0;
+
+    app-carousel {
+      display: none;
+    }
+  }
 }
 
 .productos-grid-section {
@@ -445,29 +458,6 @@
       color: $color-error;
     }
   }
-
-  .volver-carrusel-btn {
-    margin-top: 0.2rem;
-    width: fit-content;
-    text-decoration: none;
-    color: $color-text-light;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    font-weight: 700;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    padding: 0.6rem 1rem;
-    background: rgba(0, 0, 0, 0.35);
-    transition: all $transition-fast;
-
-    &:hover {
-      border-color: $color-accent;
-      color: $color-accent;
-      transform: translateY(-1px);
-    }
-  }
-
 }
 
 @include responsive(mobile) {
@@ -648,11 +638,6 @@
         font-size: 0.68rem;
         padding: 0.2rem 0.44rem;
       }
-    }
-
-    .volver-carrusel-btn {
-      font-size: 0.78rem;
-      padding: 0.46rem 0.78rem;
     }
   }
 }
@@ -843,12 +828,6 @@
         font-size: 0.6rem;
         padding: 0.14rem 0.32rem;
       }
-    }
-
-    .volver-carrusel-btn {
-      font-size: 0.7rem;
-      padding: 0.34rem 0.6rem;
-      gap: 0.35rem;
     }
   }
 }
