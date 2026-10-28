@@ -96,6 +96,16 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
     kept visible. Brand `h1.brand-name` "Granart" 15.2px (0.95rem, ≤480px step) vs
     card h3 13.76px (0.86rem) — brand now larger; desktop 22.4px vs 17.9px max.
   - Delivery: merged to `main` and pushed (established auto-deploy flow).
+- Iteration 3 browser check (ego-browser, 2026-10-28, local dev server, commits `9d010f2`..`c52e92b`):
+  - T9 detail card: band at 1025/1100px → card x=240-960 (w=720), corridor 37px,
+    65px right clearance. At ≥1200px unchanged (x=212 centered, corridor 17px +).
+  - BOUNDARY FIX (orchestrator, follow-up commit): at exactly 1199px the band did
+    NOT apply — `matchMedia("(max-width: 1199px)")` false at innerWidth 1199
+    (viewport width 1199.00000002 from float rounding). Changed to
+    `max-width: 1199.98px`; re-measured 1199 → card x=240-960, corridor 37px. Rule:
+    half-pixel upper bounds for exclusive ranges.
+  - T8 brand: 390px → 17.6px (1.2rem) vs card h3 13.76px; eyebrow still hidden.
+  - Delivery: merged to `main` and pushed (established auto-deploy flow).
 - Iteración 2 (rama `feat/carousel-ux-iter2`):
   - T5 `861e3a6` fix(carousel): abrir corredor tablet corriendo la tarjeta y soltar el cap del rail
     - SCSS-only: no runnable RED (stated exception — CSS geometry, no test harness

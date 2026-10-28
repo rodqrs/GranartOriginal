@@ -305,7 +305,9 @@
   // angosta del rango) su borde derecho quede en x=960, a 65px del borde del
   // viewport: la tarjeta se achica, no se sale. El anclaje al fondo no
   // cambia (`align-items: flex-end` manda). ≥1200px y ≤1024px intactos.
-  @media (min-width: 1025px) and (max-width: 1199px) {
+  // `1199.98px` y no `1199px`: el ancho real puede ser 1199.000000x por
+  // redondeo de coma flotante y el query exacto lo deja afuera.
+  @media (min-width: 1025px) and (max-width: 1199.98px) {
     justify-content: flex-start;
 
     .detalle-contenido {
