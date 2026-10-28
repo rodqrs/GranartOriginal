@@ -67,6 +67,20 @@
     bottom: clamp(1.5rem, 20vh, 8rem);
     max-width: none;
   }
+
+  // Tablet (769-1024px): se abandona el centrado y se ancla la tarjeta a una
+  // banda fija. `left: 21rem` (x=336) abre el corredor entre rail y tarjeta:
+  // el rail termina en x≈203 y la flecha previa (fórmula base de `.prev`,
+  // x≈217-267) queda dentro con aire a ambos lados. `right: 7rem` (x=112)
+  // despeja la flecha next (`right: 2rem` + 50px de botón → borde izquierdo
+  // en viewport-82): la tarjeta nunca la alcanza, quedan 30px de holgura en
+  // todo el rango tablet. Desktop (≥1025px) y mobile (≤768px) no cambian.
+  @include responsive(tablet) {
+    left: 21rem;
+    right: 7rem;
+    transform: none;
+    max-width: none;
+  }
 }
 
 // ==================== CONTENEDOR TEXTO CON GLASSMORPHISM ====================
@@ -211,16 +225,13 @@
     // `carousel.ts`), así que ningún item queda inalcanzable.
     scroll-behavior: smooth;
 
-    // Tablet (769-1024px): la flecha previa se espeja al borde izquierdo
-    // (`left: 2rem` en `.carousel-arrow.prev`) a media altura. Para que el
-    // rail no quede debajo del botón se recorta su altura: `top: 7rem` más
-    // este tope deja el borde inferior del rail en `50vh - 2rem`, por encima
-    // del borde superior de la flecha (`50vh - 25px` con 50px de alto).
-    // Con la lista completa (7 items) el rail scrollea; el seguimiento del
-    // producto activo (`centrarThumbnailActivo()`) no cambia.
-    @include responsive(tablet) {
-      max-height: calc(50vh - 9rem);
-    }
+    // Tablet (769-1024px): SIN cap propio de altura. La iteración anterior
+    // (`542c6a7`) recortaba el rail a `calc(50vh - 9rem)` para despejar la
+    // flecha previa espejada al borde, pero truncaba la lista a 3-4 de las 7
+    // miniaturas: se revierte y el rail vuelve a mostrar la lista completa.
+    // El despeje de la flecha ahora lo da la tarjeta, que se corre a la
+    // derecha (`left: 21rem` en `.slide-overlay`) y abre un corredor donde
+    // el botón entra sin tocar el rail.
 
     .thumbnail-item {
       display: grid;
@@ -310,22 +321,15 @@
   }
 
   &.prev {
-    // Desktop amplio (≥1025px): apoyado a la derecha del rail de miniaturas,
-    // que ocupa `0.8rem + min(190px, 26vw)` desde el borde. Ahí el corredor
-    // entre rail y tarjeta (≈87px a 1025px, crece con el ancho) ya entra el
-    // botón de 50px sin tocar ninguno de los dos.
+    // Desktop (≥1025px) y tablet (769-1024px): apoyado a la derecha del rail
+    // de miniaturas, que ocupa `0.8rem + min(190px, 26vw)` desde el borde.
+    // En tablet `26vw` ya supera los 190px, así que la fórmula da x≈217 en
+    // todo el rango y vuelve al slot original (x=217-267): la tarjeta se
+    // ancla a `left: 21rem` en `.slide-overlay` (antes empezaba en x≈225 a
+    // 900px y tapaba el botón), de modo que el botón queda DENTRO del
+    // corredor rail↔tarjeta con 14px de aire del rail y 69px de la tarjeta,
+    // y comparte el ritmo "apoyado al rail" con su par desktop.
     left: calc(0.8rem + min(190px, 26vw) + 0.9rem);
-
-    // Tablet (769-1024px): el corredor se cierra — la tarjeta centrada
-    // empieza en x≈225 a 900px y x≈279 a 1000px (medido en vivo) — y el
-    // botón no entra entre el rail y la tarjeta. Se espeja el `right: 2rem`
-    // de `.next`: offset fijo desde el borde izquierdo del viewport. A x=32
-    // el botón queda siempre a la izquierda de la tarjeta (su borde menor
-    // medido es x≈157), pero cae sobre la franja del rail, así que ese
-    // overlay se recorta en `.carousel-thumbnails` para despejarlo.
-    @include responsive(tablet) {
-      left: 2rem;
-    }
 
     @include responsive(mobile) {
       left: 1rem;
