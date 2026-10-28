@@ -23,7 +23,7 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
 - [x] T6 Mobile: hide the "Catalogo destacado" eyebrow (`home.html` line 9, the `.section-header .eyebrow` of `#productos-grid`) on mobile only — redundant and crowds the title. Keep the "Resumen final" eyebrow untouched.
 - [x] T7 Header: increase the "Granart" brand title font size — it currently renders smaller than the product card titles; it must read clearly larger (header component template/styles; check all breakpoints, keep mobile legible).
 - [x] T8 Header v2 (user feedback on T7): bump the "Granart" title a bit MORE at every breakpoint (all versions), keeping hierarchy and no header overflow. Current: desktop clamp(1.4rem,2.5vw,1.6rem); 390px 0.95rem; ≤480px 0.95rem; ≤360px 0.85rem — card h3 reference 0.86-1.12rem.
-- [ ] T9 Detail cards desktop fix: at desktop widths BELOW 1200px (1025-1199px), each product detail card (`.producto-detalle-seccion` content card with the detalle rail sidebar present) slides under the sidebar. Apply the same pattern as T5: shift the card right with a fixed band/offset so it clears the rail with a clean corridor at 1025-1199px; ≥1200px unchanged; verify no overflow against the right edge.
+- [x] T9 Detail cards desktop fix: at desktop widths BELOW 1200px (1025-1199px), each product detail card (`.producto-detalle-seccion` content card with the detalle rail sidebar present) slides under the sidebar. Apply the same pattern as T5: shift the card right with a fixed band/offset so it clears the rail with a clean corridor at 1025-1199px; ≥1200px unchanged; verify no overflow against the right edge.
 
 ## Constraints
 - Comments in Spanish (project convention).
@@ -153,7 +153,7 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
     - `npm test`: OK — Vitest 5 files / 21 tests passed.
     - `npm run lint`: OK — "All files pass linting."
 - Iteración 3 (rama `feat/title-detail-card-fix`, T8 + T9):
-  - T8 (este commit) feat(header): segundo agrande del titulo de marca en todos los breakpoints
+  - T8 `9d010f2` feat(header): segundo agrande del titulo de marca en todos los breakpoints
     - Styles-only en el header (template intacto): no runnable RED (stated
       exception — CSS-only, no test harness asserts computed font sizes).
       Escalones nuevos, +14-18% sobre cada valor de T7, jerarquía intacta
@@ -169,3 +169,23 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
       - Presupuesto de ancho a 390px: logo 34 + marca ~81 + pill Inicio ~31
         + 3 redes (30px) ~96 + gaps/padding ≈ 275px < 390px — sin wrap ni
         overflow, cap de 118px sin activarse.
+  - T9 (este commit) fix(home): banda fija 1025-1199px para la tarjeta de detalle
+    - SCSS-only: no runnable RED (stated exception — CSS geometry, no test
+      harness renders layout). Estructura inspecteada en `home.html`: cada
+      `.producto-detalle-seccion` es un flex ROW centrado con
+      `.detalle-thumbnails` (rail absoluto, `left: 0.8rem`,
+      `width: min(190px, 26vw)` → borde derecho x=202.8 constante en el
+      rango, z=3) y `.detalle-contenido` (tarjeta en flujo, `max-width:
+      760px`, z=2). Centrada, a 1025px la tarjeta arranca en
+      48 + (929-760)/2 = x≈132.5 → ~70px metida bajo el rail; a 1199px
+      queda en x≈219.5, sólo 17px de corredor. Mismo arreglo que
+      `.slide-overlay` en tablet (`861e3a6`): se abandona el centrado
+      (`justify-content: flex-start`) y se ancla banda fija
+      `margin-left: 12rem` → borde izquierdo x=240 (padding 3rem + 192px;
+      corredor 37.2px con el rail) y `max-width: 45rem` (720px) para que a
+      1025px el borde derecho quede en 240+720=960, a 65px del viewport y
+      17px del borde de padding: la tarjeta se achica, no se desborda.
+      Geometría en el rango: a 1100px tarjeta 240-960 (corredor 37px,
+      holgura derecha 140px); a 1199px igual (holgura 239px). Vertical
+      intacto: `align-items: flex-end` sigue anclando al fondo. ≥1200px
+      (centrado, corredor ≥17px ya existente) y ≤1024px sin diff.

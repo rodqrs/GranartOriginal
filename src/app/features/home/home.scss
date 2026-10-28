@@ -294,6 +294,26 @@
     }
   }
 
+  // Desktop chico (1025-1199px): el centrado deja la tarjeta debajo del rail.
+  // Centrada, su borde izquierdo arranca en x≈132 a 1025px mientras el rail
+  // termina en x≈203 (left 0.8rem + 190px de ancho, constante en todo el
+  // rango porque 26vw ya supera los 190px). Mismo arreglo que `.slide-overlay`
+  // en tablet (commit `861e3a6`): se abandona el centrado y se ancla a una
+  // banda fija. `margin-left: 12rem` sobre el padding de 3rem deja el borde
+  // izquierdo de la tarjeta en x=240 (corredor de ~37px con el rail) y
+  // `max-width: 45rem` la encoge a 720px para que a 1025px (la medida más
+  // angosta del rango) su borde derecho quede en x=960, a 65px del borde del
+  // viewport: la tarjeta se achica, no se sale. El anclaje al fondo no
+  // cambia (`align-items: flex-end` manda). ≥1200px y ≤1024px intactos.
+  @media (min-width: 1025px) and (max-width: 1199px) {
+    justify-content: flex-start;
+
+    .detalle-contenido {
+      margin-left: 12rem;
+      max-width: 45rem;
+    }
+  }
+
   // ==================== CHEVRON INFERIOR "SIGUIENTE" (SOLO MOBILE) ====================
   // Va en absoluto porque `.producto-detalle-seccion` es un flex ROW: un hijo
   // mas en flujo se colocaria al lado de `.detalle-contenido`, no debajo. La
