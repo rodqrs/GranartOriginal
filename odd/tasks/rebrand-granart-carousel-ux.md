@@ -87,7 +87,7 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
   - Wheel test: 300px requested → exactly 300px moved (twice), gradual scroll
     restored (was 300px → 921px full-viewport jump).
 - Iteración 2 (rama `feat/carousel-ux-iter2`):
-  - T5 `<id>` fix(carousel): abrir corredor tablet corriendo la tarjeta y soltar el cap del rail
+  - T5 `861e3a6` fix(carousel): abrir corredor tablet corriendo la tarjeta y soltar el cap del rail
     - SCSS-only: no runnable RED (stated exception — CSS geometry, no test harness
       renders layout). Geometric reasoning (all in px, tablet 769-1024px):
       - Rail cap REMOVED → sidebar shows all 7 thumbnails again (rail spans
@@ -108,7 +108,7 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
         overlaps card horizontally (267 < 336).
       - Desktop ≥1025px: same base rules as before (no diff emitted). Mobile
         ≤768px: carousel hidden, no diff.
-  - T6 `<id>` feat(home): ocultar el eyebrow "Catalogo destacado" en movil
+  - T6 `4b46a09` feat(home): ocultar el eyebrow "Catalogo destacado" en movil
     - SCSS-only: no runnable RED (stated exception — breakpoint visibility, no
       test harness asserts computed styles). In the `responsive(mobile)` block
       of home.scss, `.section-header .eyebrow` (only exists inside
@@ -119,7 +119,7 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
       (element hidden; rule was a no-op). The h2/p rules of the section header
       keep their mobile sizing, so spacing tightens only by the eyebrow's own
       0.35rem margin.
-  - T7 `<id>` feat(header): agrandar el titulo de marca sobre los titulos de tarjeta
+  - T7 `0595bf6` feat(header): agrandar el titulo de marca sobre los titulos de tarjeta
     - Styles-only in header component (template untouched — the `h1.brand-name`
       node needed no markup change): no runnable RED (stated exception).
       Reference sizes measured in home.scss: grid card h3 =
@@ -137,3 +137,8 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
         ~56px < 92px cap). Width budget at 390px: logo 44 + brand ~70 +
         Inicio pill ~34 + 3 social icons ~110 + gaps/padding ≈ 272px < 390px —
         no wrap, no overflow.
+  - Verification (2026-10-28, iteration 2, final state after `0595bf6`):
+    - `npm run build`: OK — production build completes, no errors, no budget
+      warnings (initial total 276.25 kB).
+    - `npm test`: OK — Vitest 5 files / 21 tests passed.
+    - `npm run lint`: OK — "All files pass linting."
