@@ -169,7 +169,7 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
       - Presupuesto de ancho a 390px: logo 34 + marca ~81 + pill Inicio ~31
         + 3 redes (30px) ~96 + gaps/padding ≈ 275px < 390px — sin wrap ni
         overflow, cap de 118px sin activarse.
-  - T9 (este commit) fix(home): banda fija 1025-1199px para la tarjeta de detalle
+  - T9 `cc3820a` fix(home): banda fija 1025-1199px para la tarjeta de detalle
     - SCSS-only: no runnable RED (stated exception — CSS geometry, no test
       harness renders layout). Estructura inspecteada en `home.html`: cada
       `.producto-detalle-seccion` es un flex ROW centrado con
@@ -189,3 +189,11 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
       holgura derecha 140px); a 1199px igual (holgura 239px). Vertical
       intacto: `align-items: flex-end` sigue anclando al fondo. ≥1200px
       (centrado, corredor ≥17px ya existente) y ≤1024px sin diff.
+  - Verification (2026-10-28, iteración 3, estado final de los commits):
+    - `npm run build`: OK — producción completa, sin errores ni budget
+      warnings (initial total 276.49 kB).
+    - `npm test`: OK — Vitest 5 files / 21 tests passed.
+    - `npm run lint`: OK — "All files pass linting."
+    - Browser check (ego-browser): NO EJECUTADO en esta iteración (writer
+      sin browser); verificación geométrica razonada sobre las medidas
+      vivas de las iteraciones 1-2 (rail x≈203 constante ≥769px).
