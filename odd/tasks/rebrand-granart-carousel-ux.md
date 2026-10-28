@@ -84,8 +84,16 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
     - Tablet 900px: prev arrow measured x=32-82, info card starts x=254 → no
       overlap (was x=217-267 overlapping). Next arrow unchanged x=803+.
     - Snap removed: computed `scroll-snap-type: none` on root scroller.
-  - Wheel test: 300px requested → exactly 300px moved (twice), gradual scroll
-    restored (was 300px → 921px full-viewport jump).
+    - Wheel test: 300px requested → exactly 300px moved (twice), gradual scroll
+      restored (was 300px → 921px full-viewport jump).
+- Iteration 2 browser check (ego-browser, 2026-10-28, local dev server, commit `8680f99`):
+  - Tablet 769/900/1024px: prev arrow x=217-267 (original slot), card left edge x=336
+    (fixed band `left: 21rem`), 69px corridor rail↔card, 30px card↔next-arrow at all
+    three widths. Rail cap removed: full 7-thumbnail sidebar visible (screenshot).
+  - Mobile 390px: "Catalogo destacado" eyebrow not visible; "Resumen final" eyebrow
+    kept visible. Brand `h1.brand-name` "Granart" 15.2px (0.95rem, ≤480px step) vs
+    card h3 13.76px (0.86rem) — brand now larger; desktop 22.4px vs 17.9px max.
+  - Delivery: merged to `main` and pushed (established auto-deploy flow).
 - Iteración 2 (rama `feat/carousel-ux-iter2`):
   - T5 `861e3a6` fix(carousel): abrir corredor tablet corriendo la tarjeta y soltar el cap del rail
     - SCSS-only: no runnable RED (stated exception — CSS geometry, no test harness
