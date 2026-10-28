@@ -10,8 +10,8 @@ import { SOCIAL_LINKS, SocialLink } from '../../social/social-links';
  * dentro de `home.html` (ese bloque grande con la grilla de "todos los
  * productos en detalle" se mantiene en `features/home/home.html`). Este
  * `app-footer` es la pieza de chrome montada en `app.html` después de
- * `</main>`, fuera del layout scroll-snap, y solo contiene copyright + los
- * 3 íconos de redes sociales (mismo set que el Header).
+ * `</main>`, fuera del layout principal de secciones, y solo contiene
+ * copyright + los 3 íconos de redes sociales (mismo set que el Header).
  */
 @Component({
   selector: 'app-footer',

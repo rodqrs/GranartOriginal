@@ -61,12 +61,6 @@ html, body {
 // Scroll suave
 html {
   scroll-behavior: smooth;
-  // `proximity` en lugar de `mandatory`: las secciones altas (grilla de 7
-  // productos y resumen final) miden más que la pantalla y no tienen punto de
-  // snap intermedio, así que con `mandatory` sus filas de abajo quedaban
-  // inalcanzables (el snap empujaba al siguiente ancla). `proximity` reposa
-  // cerca de los bordes y deja scroll libre dentro de la sección.
-  scroll-snap-type: y proximity;
   scroll-padding-top: 0;
 }
 

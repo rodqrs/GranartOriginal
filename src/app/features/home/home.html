@@ -1,9 +1,9 @@
-<div class="home-snap-layout">
-  <section #snapSection id="inicio-carrusel" class="home-hero-section snap-section">
+<div class="home-layout">
+  <section #seccion id="inicio-carrusel" class="home-hero-section">
     <app-carousel [productos]="productosDisponibles"></app-carousel>
   </section>
 
-  <section #snapSection id="productos-grid" class="productos-grid-section snap-section">
+  <section #seccion id="productos-grid" class="productos-grid-section">
     <div class="productos-grid-shell">
       <div class="section-header">
         <p class="eyebrow">Catalogo destacado</p>
@@ -42,7 +42,7 @@
 
   <section class="productos-detalle-wrapper">
     @for (producto of productosDisponibles; track producto.id; let i = $index) {
-      <article #snapSection class="producto-detalle-seccion snap-section" [id]="'detalle-producto-' + producto.id">
+      <article #seccion class="producto-detalle-seccion" [id]="'detalle-producto-' + producto.id">
         <img
           [src]="getImagenUrl(producto.imagenUrl)"
           [alt]="producto.titulo"
@@ -92,9 +92,9 @@
         <!-- Chevron inferior "siguiente" (solo mobile) -->
         <!-- El rail lateral esta oculto en esta medida, asi que este enlace es la -->
         <!-- unica forma visible de pasar al producto siguiente. No lleva scroll en -->
-        <!-- JS: el `scroll-behavior: smooth` y el `scroll-snap` globales resuelven -->
-        <!-- el desplazamiento al resolver el `href`. En el ultimo producto no se -->
-        <!-- renderiza: no hay seccion destino. -->
+        <!-- JS: el `scroll-behavior: smooth` global resuelve el desplazamiento al -->
+        <!-- resolver el `href`. En el ultimo producto no se renderiza: no hay -->
+        <!-- seccion destino. -->
         @if (i < productosDisponibles.length - 1) {
           <a class="detalle-chevron-next"
              [attr.href]="'#detalle-producto-' + productosDisponibles[i + 1].id"
@@ -106,7 +106,7 @@
     }
   </section>
 
-  <footer #snapSection id="resumen-final" class="footer-final-section snap-section">
+  <footer #seccion id="resumen-final" class="footer-final-section">
     <div class="footer-shell">
       <div class="footer-header">
         <p class="eyebrow">Resumen final</p>

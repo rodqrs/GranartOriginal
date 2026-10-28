@@ -48,32 +48,21 @@ import { Product } from '../../core/models/product.model';
   styleUrl: './home.scss'
 })
 export class Home implements AfterViewInit, OnDestroy {
-  @ViewChildren('snapSection', { read: ElementRef })
-  snapSections!: QueryList<ElementRef<HTMLElement>>;
+  @ViewChildren('seccion', { read: ElementRef })
+  pageSections!: QueryList<ElementRef<HTMLElement>>;
 
   private readonly repository = inject(ProductRepository);
 
-  private isWheelNavigating = false;
-  private currentSectionIndex = 0;
-  private wheelListener?: (event: WheelEvent) => void;
   private scrollListener?: () => void;
-  private scrollIdleTimer: ReturnType<typeof setTimeout> | null = null;
-  private snapSectionsSubscription?: Subscription;
+  private pageSectionsSubscription?: Subscription;
   private readonly fallbackImageUrl = 'assets/images/logo.jpg';
 
   /**
    * Tolerancia en px para el cálculo de la sección activa.
-   * Absorbe el offset residual del snap nativo y el solapamiento del header
-   * fijo, sin dejar que una sección siguiente más baja robe el índice.
+   * Absorbe el solapamiento del header fijo sobre el borde superior del
+   * viewport, sin dejar que una sección siguiente más baja robe el índice.
    */
-  private readonly snapTolerance = 8;
-
-  /**
-   * ms de inactividad de scroll antes de liberar el lock de navegación.
-   * El snap nativo dispara eventos `scroll` reales: 120ms de silencio
-   * significa que el scroll terminó de verdad.
-   */
-  private readonly scrollIdleMs = 120;
+  private readonly activeTolerance = 8;
 
   /**
    * Id del producto cuya pantalla de detalle está activa, o `null` si la
@@ -87,65 +76,26 @@ export class Home implements AfterViewInit, OnDestroy {
       return;
     }
 
-    this.wheelListener = (event: WheelEvent) => this.handleWheelNavigation(event);
-    window.addEventListener('wheel', this.wheelListener, { passive: false });
-
-    // El snap nativo (`styles.scss` → `scroll-snap-type: y mandatory`) dispara
-    // scroll. Este listener renueva el lock para que se libere cuando el
-    // scroll REALMENTE se detiene, en lugar de con un timeout fijo que compite
-    // con la duración real del scroll suave.
-    this.scrollListener = () => this.renewScrollLock();
+    // Seguimiento pasivo de la sección visible: solo alimenta el resaltado
+    // del rail lateral. No interviene en el scroll (sin preventDefault ni
+    // scrollIntoView): el desplazamiento queda en manos del usuario y el
+    // navegador lo hace gradual, sin saltos de pantalla completa.
+    this.scrollListener = () => this.syncActiveSection();
     window.addEventListener('scroll', this.scrollListener, { passive: true });
 
-    this.snapSectionsSubscription = this.snapSections.changes.subscribe(() => {
-      this.syncCurrentSectionIndex();
+    this.pageSectionsSubscription = this.pageSections.changes.subscribe(() => {
+      this.syncActiveSection();
     });
 
-    setTimeout(() => this.syncCurrentSectionIndex(), 0);
+    setTimeout(() => this.syncActiveSection(), 0);
   }
 
   ngOnDestroy(): void {
-    if (typeof window !== 'undefined') {
-      if (this.wheelListener) {
-        window.removeEventListener('wheel', this.wheelListener);
-      }
-      if (this.scrollListener) {
-        window.removeEventListener('scroll', this.scrollListener);
-      }
+    if (typeof window !== 'undefined' && this.scrollListener) {
+      window.removeEventListener('scroll', this.scrollListener);
     }
 
-    if (this.scrollIdleTimer) {
-      clearTimeout(this.scrollIdleTimer);
-      this.scrollIdleTimer = null;
-    }
-
-    this.snapSectionsSubscription?.unsubscribe();
-  }
-
-  /**
-   * Mantiene el lock de navegación mientras el scroll sigue activo y lo libera
-   * `scrollIdleMs` después del último evento real de scroll.
-   *
-   * Reemplaza el `setTimeout` fijo de 700ms. Con secciones de altura variable
-   * (`min-height`, `100svh`, y el override `min-height: auto` del responsive)
-   * el scroll suave puede tardar más o menos que 700ms: el lock se liberaba en
-   * pleno vuelo y el siguiente evento de rueda se peleaba con el scroll que
-   * todavía estaba corriendo.
-   */
-  private renewScrollLock(): void {
-    this.isWheelNavigating = true;
-
-    if (this.scrollIdleTimer) {
-      clearTimeout(this.scrollIdleTimer);
-    }
-
-    this.scrollIdleTimer = setTimeout(() => {
-      this.scrollIdleTimer = null;
-      this.isWheelNavigating = false;
-      // Re-sincronizar al reposo: el índice queda exactamente en la sección
-      // donde el snap nativo terminó.
-      this.syncCurrentSectionIndex();
-    }, this.scrollIdleMs);
+    this.pageSectionsSubscription?.unsubscribe();
   }
 
   /** ¿La pantalla de detalle de este producto es la que está activa? */
@@ -216,74 +166,36 @@ export class Home implements AfterViewInit, OnDestroy {
     image.src = this.fallbackImageUrl;
   }
 
-  private handleWheelNavigation(event: WheelEvent): void {
-    if (this.snapSections.length === 0) return;
-
-    const magnitude = Math.abs(event.deltaY);
-    if (magnitude < 8) return;
-
-    event.preventDefault();
-
-    if (this.isWheelNavigating) {
-      return;
-    }
-
-    this.syncCurrentSectionIndex();
-
-    const direction = event.deltaY > 0 ? 1 : -1;
-    const maxIndex = this.snapSections.length - 1;
-    const nextIndex = Math.max(0, Math.min(maxIndex, this.currentSectionIndex + direction));
-
-    if (nextIndex === this.currentSectionIndex) {
-      return;
-    }
-
-    const targetSection = this.snapSections.get(nextIndex)?.nativeElement;
-    if (!targetSection) {
-      return;
-    }
-
-    this.currentSectionIndex = nextIndex;
-    this.renewScrollLock();
-    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
   /**
    * Calcula la sección activa anclando la medición al BORDE SUPERIOR del
-   * viewport, que es la misma referencia que usa
-   * `scrollIntoView({ block: 'start' })`.
+   * viewport, que es la misma referencia que usan los anclas del navbar
+   * al resolver el `href`.
    *
    * Antes comparaba cada `top` contra el CENTRO del viewport. Con secciones de
    * altura desigual eso devuelve un índice adelantado: si la sección siguiente
    * mide menos de media pantalla, su `top` queda más cerca del centro que el de
-   * la sección visible. Una rueda hacia arriba resolvía entonces a la sección
-   * en la que ya se estaba, el evento se consumía, y el scroll quedaba
-   * "trabado" respondiendo solo hacia abajo.
-   *
-   * Ahora se toma la última sección cuyo `top` ya alcanzó el borde superior,
-   * que es exactamente la que ocupa el viewport.
+   * la sección visible. Ahora se toma la última sección cuyo `top` ya alcanzó
+   * el borde superior, que es exactamente la que ocupa el viewport.
    */
-  private syncCurrentSectionIndex(): void {
-    if (typeof window === 'undefined' || this.snapSections.length === 0) {
+  private syncActiveSection(): void {
+    if (typeof window === 'undefined' || this.pageSections.length === 0) {
       return;
     }
 
-    const probe = window.scrollY + this.snapTolerance;
+    const probe = window.scrollY + this.activeTolerance;
     let activeIndex = 0;
 
-    this.snapSections.forEach((sectionRef, index) => {
+    this.pageSections.forEach((sectionRef, index) => {
       const top = sectionRef.nativeElement.getBoundingClientRect().top + window.scrollY;
       if (top <= probe) {
         activeIndex = index;
       }
     });
 
-    this.currentSectionIndex = activeIndex;
-
     // Derivar el producto activo desde el `id` real de la sección en vez de
     // asumir un offset fijo de índices. Si mañana se agrega o quita una sección
     // (grilla, banner), el rail sigue resaltando el producto correcto.
-    const sectionId = this.snapSections.get(activeIndex)?.nativeElement.id ?? '';
+    const sectionId = this.pageSections.get(activeIndex)?.nativeElement.id ?? '';
     const match = /^detalle-producto-(\d+)$/.exec(sectionId);
     this.activeDetalleId.set(match ? Number(match[1]) : null);
   }

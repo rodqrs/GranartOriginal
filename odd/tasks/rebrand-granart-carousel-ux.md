@@ -18,7 +18,7 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
 - [x] T1 Brand: rename company name to "Granart" in `src/index.html` `<title>`, `src/app/shared/components/header/header.ts` (nombreEmpresa), `src/app/shared/components/footer/footer.ts` (nombreEmpresa); update any spec asserting the old name.
 - [x] T2 Mobile: hide the carousel (hero `app-carousel`) on mobile via existing breakpoint conventions; hide the `.volver-carrusel-btn` button in `src/app/features/home/home.html` (globally).
 - [x] T3 Desktop: reposition carousel left arrow so it never overlaps the info card at 760-1000px, mirroring the right arrow's edge offset.
-- [ ] T4 Scroll: remove full-screen snap behavior (`scroll-snap-type` in `src/styles.scss`, `.snap-section` rules in `src/app/features/home/home.scss`) and any JS in `src/app/features/home/home.ts` that forces scroll/focus between sections; keep smooth anchor scrolling for nav links.
+- [x] T4 Scroll: remove full-screen snap behavior (`scroll-snap-type` in `src/styles.scss`, `.snap-section` rules in `src/app/features/home/home.scss`) and any JS in `src/app/features/home/home.ts` that forces scroll/focus between sections; keep smooth anchor scrolling for nav links.
 
 ## Constraints
 - Comments in Spanish (project convention).
