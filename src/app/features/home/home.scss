@@ -476,9 +476,12 @@
   }
 
   .section-header {
+    // En mobile el eyebrow "Catalogo destacado" es ruido: enciende pegado al
+    // h2 y lo amontona. Se oculta SOLO este (`.section-header` solo existe en
+    // la seccion de la grilla; el "Resumen final" del footer usa
+    // `.footer-header` y queda intacto).
     .eyebrow {
-      font-size: 0.68rem;
-      margin-bottom: 0.35rem;
+      display: none;
     }
 
     h2 {
@@ -674,13 +677,9 @@
     gap: 0.55rem;
   }
 
+  // El eyebrow no lleva escalón a ≤360px: ya está oculto por el bloque
+  // mobile de arriba (`.section-header .eyebrow { display: none }`).
   .section-header {
-    .eyebrow {
-      font-size: 0.62rem;
-      margin-bottom: 0.28rem;
-      letter-spacing: 0.1em;
-    }
-
     h2 {
       font-size: clamp(1rem, 6.6vw, 1.26rem);
       margin-bottom: 0.25rem;

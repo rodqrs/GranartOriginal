@@ -20,7 +20,7 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
 - [x] T3 Desktop: reposition carousel left arrow so it never overlaps the info card at 760-1000px, mirroring the right arrow's edge offset.
 - [x] T4 Scroll: remove full-screen snap behavior (`scroll-snap-type` in `src/styles.scss`, `.snap-section` rules in `src/app/features/home/home.scss`) and any JS in `src/app/features/home/home.ts` that forces scroll/focus between sections; keep smooth anchor scrolling for nav links.
 - [x] T5 Carousel tablet fix v2 (user feedback on `542c6a7`): the rail cap truncated the sidebar — restore the FULL thumbnail sidebar (remove the tablet `max-height: calc(50vh - 9rem)` cap) and instead shift the slide info card to the right to open a clear corridor for the prev arrow between rail and card. Measured at 900px: rail x≈12.8-202.8, prev arrow currently x=32-82, card x=254-631. Target: arrow sits clear of BOTH (original slot ~x=217-267 works if card left edge ≥ ~300px at 769-1000px). Applies to tablet 769-1024px; desktop ≥1025px unchanged; mobile ≤768px has no carousel (hidden).
-- [ ] T6 Mobile: hide the "Catalogo destacado" eyebrow (`home.html` line 9, the `.section-header .eyebrow` of `#productos-grid`) on mobile only — redundant and crowds the title. Keep the "Resumen final" eyebrow untouched.
+- [x] T6 Mobile: hide the "Catalogo destacado" eyebrow (`home.html` line 9, the `.section-header .eyebrow` of `#productos-grid`) on mobile only — redundant and crowds the title. Keep the "Resumen final" eyebrow untouched.
 - [ ] T7 Header: increase the "Granart" brand title font size — it currently renders smaller than the product card titles; it must read clearly larger (header component template/styles; check all breakpoints, keep mobile legible).
 
 ## Constraints
@@ -108,3 +108,14 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
         overlaps card horizontally (267 < 336).
       - Desktop ≥1025px: same base rules as before (no diff emitted). Mobile
         ≤768px: carousel hidden, no diff.
+  - T6 `<id>` feat(home): ocultar el eyebrow "Catalogo destacado" en movil
+    - SCSS-only: no runnable RED (stated exception — breakpoint visibility, no
+      test harness asserts computed styles). In the `responsive(mobile)` block
+      of home.scss, `.section-header .eyebrow` (only exists inside
+      `#productos-grid`; the footer header uses `.footer-header`) now gets
+      `display: none`. The "Resumen final" eyebrow (`.footer-header .eyebrow`,
+      own mobile rule in the same file) untouched, and its 0.68rem mobile
+      sizing rule kept. Removed the now-dead 0.62rem eyebrow sizing at ≤360px
+      (element hidden; rule was a no-op). The h2/p rules of the section header
+      keep their mobile sizing, so spacing tightens only by the eyebrow's own
+      0.35rem margin.
