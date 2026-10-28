@@ -456,7 +456,8 @@
 }
 
 @include responsive(mobile) {
-  .home-hero-section,
+  // El hero queda fuera: en móvil el carrusel está oculto y la seccion se
+  // colapsa (min-height: 0 arriba) para que arranque directo la grilla.
   .productos-grid-section,
   .producto-detalle-seccion,
   .footer-final-section {
