@@ -65,5 +65,13 @@ Working repo: `rodqrs.github.io` (deploy repo for https://rodqrs.github.io/Grana
   - `npm run build`: OK — production build completes, no errors, no budget warnings.
   - `npm test`: OK — Vitest 5 files / 21 tests passed (browser mode).
   - `npm run lint`: OK — "All files pass linting."
-  - Browser check (ego-browser): PENDING — needs a live pass at 390 / 760 / 900 / 1000px
-    to visually confirm T2/T3 and gradual wheel scroll (T4).
+  - Browser check (ego-browser): DONE (2026-10-28, local dev server, committed state).
+    - Mobile 390px: `<title>` "Granart", carousel `display: none` / not visible,
+      `.volver-carrusel-btn` absent. NOTE: hero section still occupies full
+      viewport height (844px) as blank space — product decision pending on what
+      to show there (collapse vs content).
+    - Tablet 900px: prev arrow measured x=32-82, info card starts x=254 → no
+      overlap (was x=217-267 overlapping). Next arrow unchanged x=803+.
+    - Snap removed: computed `scroll-snap-type: none` on root scroller.
+    - Wheel test: 300px requested → exactly 300px moved (twice), gradual scroll
+      restored (was 300px → 921px full-viewport jump).
